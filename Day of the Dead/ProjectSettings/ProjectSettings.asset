@@ -4,7 +4,7 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 14
-  productGUID: bed49b40fa547ce4bb237685e5c33d08
+  productGUID: a8685247d54c66b4296955e88658f601
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   defaultScreenOrientation: 4
@@ -630,12 +630,11 @@ PlayerSettings:
       daydreamIconForeground: {fileID: 0}
       daydreamIconBackground: {fileID: 0}
   cloudServicesEnabled:
-    Collab: 1
     UNet: 1
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 2
-  cloudProjectId: ea85f15e-8d14-4308-85af-141d638bf688
-  projectName: Day of the Dead
+  cloudProjectId: 84d01214-531e-4d05-af32-184d9bd15e99
+  projectName: Day of the Dead (1)
   organizationId: lightning2x
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
