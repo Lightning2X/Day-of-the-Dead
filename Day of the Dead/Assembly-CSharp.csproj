@@ -52,8 +52,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\NewBehaviourScript.cs" />
-     <Compile Include="Assets\PlayerMovement.cs" />
-     <Compile Include="Assets\PlayerMovement_Net.cs" />
+     <Compile Include="Assets\PlayerController_Net.cs" />
      <Compile Include="Assets\WayPointClass.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
