@@ -6,7 +6,11 @@ using UnityEngine.AI;
 
 public class NewBehaviourScript : MonoBehaviour
 {
-    [SerializeField]
+    public GameObject[] Waypoints;
+
+    public int currentIndex = 0;
+
+    /*[SerializeField]
     Transform _destination;
 
     [SerializeField]
@@ -18,12 +22,14 @@ public class NewBehaviourScript : MonoBehaviour
     [SerializeField]
     Transform _destination4;
     
-    Transform currentDestination;
+    Transform currentDestination;*/
 
     NavMeshAgent _navMeshAgent;
 	// Use this for initialization
 	void Start ()
     {
+        Waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
+
         _navMeshAgent = this.GetComponent<NavMeshAgent>();
 
         if(_navMeshAgent == null)
@@ -38,7 +44,7 @@ public class NewBehaviourScript : MonoBehaviour
 
     void Update()
     {
-        if( Vector3.Distance(this.transform.position, currentDestination.transform.position) < 1f)
+        if( Vector3.Distance(this.transform.position, Waypoints[currentIndex].transform.position) < 1f)
         {
             SetDestination();
         }
@@ -46,10 +52,10 @@ public class NewBehaviourScript : MonoBehaviour
 
     private void SetDestination()
     {
-        if(_destination != null && _destination2 != null && _destination3 != null)
-        {
-            float randomNumber = UnityEngine.Random.Range(0f, 1f);
-            if (randomNumber <= 0.25)
+
+        currentIndex = UnityEngine.Random.Range(0, Waypoints.Length);
+
+        /*if (randomNumber <= 0.25)
             {
                 currentDestination = _destination;
             }
@@ -64,16 +70,16 @@ public class NewBehaviourScript : MonoBehaviour
             else
             {
                 currentDestination = _destination4;
-            }
-            GoToDestination();
-        }
+            }*/
+
+        GoToDestination();
     }
 
     private void GoToDestination()
     {
-        if(currentDestination != null)
+        if(currentIndex != null && Waypoints != null)
         {
-            Vector3 targetVector = currentDestination.transform.position;
+            Vector3 targetVector = Waypoints[currentIndex].transform.position;
             _navMeshAgent.SetDestination(targetVector);
         }
     }
