@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Navigation Scene.unity
+- path: Assets/Lobby Manager/SampleScenes/Scenes/NetworkLobby.unity
   isLoaded: 1
   isActive: 1
