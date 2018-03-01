@@ -24,15 +24,14 @@ public class PlayerController_Net : NetworkBehaviour {
 	// Update is called once per frame
 	void Update () {
         if (Input.GetKey(KeyCode.W))
-            this.transform.position += new Vector3(0, 0, movementSpeed);
-
+            this.transform.position += transform.forward * movementSpeed;
         if (Input.GetKey(KeyCode.S))
-            this.transform.position -= new Vector3(0, 0, movementSpeed);
-
+            this.transform.position -= transform.forward * movementSpeed;
         if (Input.GetKey(KeyCode.A))
-            this.transform.position -= new Vector3(movementSpeed, 0);
+            this.transform.Rotate(Vector3.up * Time.deltaTime * 100f);
         if (Input.GetKey(KeyCode.D))
-            this.transform.position += new Vector3(movementSpeed, 0);
+            this.transform.Rotate(-Vector3.up * Time.deltaTime * 100f);
+
         CameraMover();
     }
 
