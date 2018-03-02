@@ -187,8 +187,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1724771351}
   - component: {fileID: 1724771350}
+  - component: {fileID: 1724771352}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Network Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -217,7 +218,7 @@ MonoBehaviour:
   m_PlayerPrefab: {fileID: 0}
   m_AutoCreatePlayer: 1
   m_PlayerSpawnMethod: 0
-  m_OfflineScene: 
+  m_OfflineScene: Lobbyscene
   m_OnlineScene: 
   m_SpawnPrefabs: []
   m_CustomConfig: 0
@@ -278,11 +279,13 @@ MonoBehaviour:
   m_ShowLobbyGUI: 1
   m_MaxPlayers: 4
   m_MaxPlayersPerConnection: 1
-  m_MinPlayers: 0
-  m_LobbyPlayerPrefab: {fileID: 0}
-  m_GamePlayerPrefab: {fileID: 0}
-  m_LobbyScene: 
-  m_PlayScene: 
+  m_MinPlayers: 2
+  m_LobbyPlayerPrefab: {fileID: 114254809176775138, guid: a9b12843492bde94b94014fa4a06de0e,
+    type: 2}
+  m_GamePlayerPrefab: {fileID: 1463696982838438, guid: 41e8413449fc4b54281616c24a280d5c,
+    type: 2}
+  m_LobbyScene: Lobbyscene
+  m_PlayScene: LobbyPlaying Scene
   lobbySlots: []
 --- !u!4 &1724771351
 Transform:
@@ -297,6 +300,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1724771352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1724771349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 227461547, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  manager: {fileID: 0}
+  showGUI: 1
+  offsetX: 0
+  offsetY: 0
 --- !u!1 &1918156116
 GameObject:
   m_ObjectHideFlags: 0
