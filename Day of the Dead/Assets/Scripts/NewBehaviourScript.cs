@@ -10,19 +10,6 @@ public class NewBehaviourScript : MonoBehaviour
 
     public int currentIndex = 0;
 
-    /*[SerializeField]
-    Transform _destination;
-
-    [SerializeField]
-    Transform _destination2;
-
-    [SerializeField]
-    Transform _destination3;
-
-    [SerializeField]
-    Transform _destination4;
-    
-    Transform currentDestination;*/
 
     NavMeshAgent _navMeshAgent;
 	// Use this for initialization
@@ -54,23 +41,6 @@ public class NewBehaviourScript : MonoBehaviour
     {
 
         currentIndex = UnityEngine.Random.Range(0, Waypoints.Length);
-
-        /*if (randomNumber <= 0.25)
-            {
-                currentDestination = _destination;
-            }
-            else if(randomNumber > 0.25 && randomNumber <= 0.5)
-            {
-                currentDestination = _destination2;
-            }
-            else if (randomNumber > 0.5 && randomNumber <= 0.75)
-            {
-                currentDestination = _destination3;
-            }
-            else
-            {
-                currentDestination = _destination4;
-            }*/
 
         GoToDestination();
     }
