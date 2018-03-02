@@ -24,7 +24,6 @@ GameObject:
   - component: {fileID: 23212015759795836}
   - component: {fileID: 114249511246671682}
   - component: {fileID: 195529939850367266}
-  - component: {fileID: 143310890462365194}
   - component: {fileID: 114444324370665064}
   - component: {fileID: 114950155635896280}
   m_Layer: 0
@@ -143,7 +142,7 @@ MonoBehaviour:
     i13: 230
     i14: 142
     i15: 181
-  m_ServerOnly: 1
+  m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
 --- !u!114 &114950155635896280
 MonoBehaviour:
@@ -156,33 +155,16 @@ MonoBehaviour:
   m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TransformSyncMode: 4
-  m_SendInterval: 0.1
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.083333336
   m_SyncRotationAxis: 5
-  m_RotationSyncCompression: 2
+  m_RotationSyncCompression: 1
   m_SyncSpin: 0
   m_MovementTheshold: 0.001
   m_VelocityThreshold: 0.0001
   m_SnapThreshold: 5
-  m_InterpolateRotation: 1
-  m_InterpolateMovement: 1
---- !u!143 &143310890462365194
-CharacterController:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1677401493231790}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 1
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_InterpolateRotation: 15
+  m_InterpolateMovement: 0.2
 --- !u!195 &195529939850367266
 NavMeshAgent:
   m_ObjectHideFlags: 1
