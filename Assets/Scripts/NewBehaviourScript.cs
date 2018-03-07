@@ -2,9 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.AI;
 
-public class NewBehaviourScript : MonoBehaviour
+public class NewBehaviourScript : NetworkBehaviour
 {
     public GameObject[] Waypoints;
 
@@ -28,6 +29,12 @@ public class NewBehaviourScript : MonoBehaviour
 	// Use this for initialization
 	void Start ()
     {
+		if (!hasAuthority) {
+			//Destroy (GetComponent<NavMeshAgent> ());
+			Destroy (this);
+			return;
+		}
+
         Waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
 
         _navMeshAgent = this.GetComponent<NavMeshAgent>();

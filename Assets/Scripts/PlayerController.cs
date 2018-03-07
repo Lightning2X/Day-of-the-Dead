@@ -1,18 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : NetworkBehaviour {
 
-	[SerializeField] private float gravity = -100f;
-	[SerializeField] private float moveSpeed = 10f;
-	[SerializeField] private float sprintSpeed = 18f;
-	[SerializeField] private float jumpSpeed = 20f;
-	[SerializeField] private WeaponProperties weapon;
+	[SerializeField] float gravity = -100f;
+	[SerializeField] float moveSpeed = 10f;
+	[SerializeField] float sprintSpeed = 18f;
+	[SerializeField] float jumpSpeed = 20f;
+	[SerializeField] GameObject virtualCamera;
+	[SerializeField] WeaponProperties weapon;
 
+	private Collider collider;
 	private CharacterController controller;
 	private CharacterProperties properties;
-	private new Camera camera;
+
+	private Camera camera;
 
 	private Vector3 velocity;
 	private Vector3 direction;
@@ -21,14 +25,19 @@ public class PlayerController : MonoBehaviour {
 
 	// Initialization
 	void Start () {
+		if (!isLocalPlayer)
+			Destroy (this);
+		
+		collider = GetComponent<Collider>();
 		controller = GetComponent<CharacterController>();
 		properties = GetComponent<CharacterProperties>();
+
 		camera = Camera.main;
 
-		Cursor.lockState = CursorLockMode.Locked;
-		Cursor.visible = false;
+		// Cursor.lockState = CursorLockMode.Locked;
+		// Cursor.visible = false;
 	}
-		
+
 	void Attack () {
 		if (weapon.isMelee)
 			Stab ();
@@ -40,7 +49,7 @@ public class PlayerController : MonoBehaviour {
 		// Check if there are any colliders inside a given sphere
 		Collider[] collisions = Physics.OverlapSphere(transform.position, weapon.attackRange);
 
-		foreach (Collider collider in collisions){
+		foreach (Collider collider in collisions) {
 			// Is the collider a character?
 			if (collider.gameObject != gameObject && (collider.tag == "Player" || collider.tag == "NPC")){
 				// calculate angle between character and forward direction
@@ -60,14 +69,10 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void Shoot () {
-		// Check if there are any colliders inside a given sphere
-
-		print ("Found an object - distance:");
 		RaycastHit hit;
-
-		if (Physics.Raycast (camera.transform.position, camera.transform.forward, out hit)) {
+		if (Physics.Raycast (camera.transform.position, camera.transform.forward, out hit, 100.0f)) {
 			Vector3 direction = hit.point - transform.position;
-			if (Physics.Raycast (transform.position, direction, out hit))
+			if (Physics.Raycast (transform.position, direction, out hit, 100.0f))
 				print ("Found an object - distance: " + hit.point);
 		}
 	}
@@ -75,7 +80,7 @@ public class PlayerController : MonoBehaviour {
 	void HandleInput () {
 		// Handle axis input
 		transform.Rotate(Vector3.up, Input.GetAxis("Mouse X"));
-		camera.transform.RotateAround(transform.position, transform.right, -Input.GetAxis("Mouse Y"));
+		virtualCamera.transform.RotateAround(transform.position, transform.right, -Input.GetAxis("Mouse Y"));
 
 		// Handle key input
 		if (Input.GetKey (KeyCode.W))
@@ -94,6 +99,9 @@ public class PlayerController : MonoBehaviour {
 			velocity.y = jumpSpeed;
 		if (Input.GetKeyDown (KeyCode.Mouse0))
 			Attack ();
+	}
+
+	void UpdateCamera () {
 	}
 	
 	// Update is called once per frame
@@ -124,5 +132,9 @@ public class PlayerController : MonoBehaviour {
 		
 		// Move player
 		controller.Move (velocity * Time.deltaTime);
+
+		// Move camera
+		if (camera)
+			camera.transform.SetPositionAndRotation (virtualCamera.transform.position, virtualCamera.transform.rotation);
 	}
 }

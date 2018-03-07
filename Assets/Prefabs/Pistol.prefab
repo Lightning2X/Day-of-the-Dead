@@ -478,5 +478,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isMelee: 0
   damage: 1
-  attackRange: 50
-  spread: 2
+  attackRange: 45
+  spread: 6
