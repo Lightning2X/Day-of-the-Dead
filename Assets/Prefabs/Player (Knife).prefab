@@ -105,7 +105,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4393716152252022}
   - component: {fileID: 33954179337254820}
-  - component: {fileID: 136900615527194760}
   - component: {fileID: 23011922155541172}
   - component: {fileID: 143124271669922806}
   - component: {fileID: 114660104318294976}
@@ -113,7 +112,7 @@ GameObject:
   - component: {fileID: 114235891453207128}
   - component: {fileID: 114551714221680342}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Player (Knife)
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -152,7 +151,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1814159609321670}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 77.62733, y: 29.78695, z: 48.683743}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4780423616933736}
@@ -196,7 +195,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1433169429429564}
   m_LocalRotation: {x: 0.15815806, y: 0, z: 0, w: 0.9874138}
-  m_LocalPosition: {x: 0, y: 2.15, z: -4.1}
+  m_LocalPosition: {x: 0.5, y: 2.15, z: -4.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4393716152252022}
@@ -500,19 +499,6 @@ MonoBehaviour:
   damage: 1
   attackRange: 5
   spread: 90
---- !u!136 &136900615527194760
-CapsuleCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1814159609321670}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!143 &143124271669922806
 CharacterController:
   m_ObjectHideFlags: 1

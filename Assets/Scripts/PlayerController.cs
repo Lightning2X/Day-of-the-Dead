@@ -22,65 +22,77 @@ public class PlayerController : NetworkBehaviour {
 	private Vector3 direction;
 	private float speed;
 
+	private bool hasFocus = true;
 
 	// Initialization
 	void Start () {
-		if (!isLocalPlayer)
-			Destroy (this);
-		
 		collider = GetComponent<Collider>();
 		controller = GetComponent<CharacterController>();
 		properties = GetComponent<CharacterProperties>();
-
+		
 		camera = Camera.main;
 
-		// Cursor.lockState = CursorLockMode.Locked;
-		// Cursor.visible = false;
+		//Cursor.lockState = CursorLockMode.Locked;
+		//Cursor.visible = false;
 	}
 
 	void Attack () {
 		if (weapon.isMelee)
-			Stab ();
+			CmdStab (virtualCamera.transform.forward);
 		else
-			Shoot ();
+			CmdShoot (virtualCamera.transform.position, virtualCamera.transform.forward);
 	}
 
-	void Stab () {
+	[Command]
+	void CmdStab (Vector3 dir) {
 		// Check if there are any colliders inside a given sphere
 		Collider[] collisions = Physics.OverlapSphere(transform.position, weapon.attackRange);
 
-		foreach (Collider collider in collisions) {
+		foreach (Collider coll in collisions) {
 			// Is the collider a character?
-			if (collider.gameObject != gameObject && (collider.tag == "Player" || collider.tag == "NPC")){
+			Debug.Log((coll.tag == "Player" || coll.tag == "NPC"));
+			if (coll.gameObject != gameObject && (coll.tag == "Player" || coll.tag == "NPC")){
 				// calculate angle between character and forward direction
-				Vector3 delta = collider.transform.position - transform.position;
-				float angle = Vector3.Angle(camera.transform.forward, delta);
+				Vector3 delta = coll.transform.position - transform.position;
+				float angle = Vector3.Angle(dir, delta);
 
 				// is the attack aimed close enough to the character?
 				if (angle <= weapon.spread * 0.5f) {
 					// Get character's properties
-					CharacterProperties properties = collider.GetComponent<CharacterProperties> ();
+					CharacterProperties prop = coll.GetComponent<CharacterProperties> ();
 
 					// Apply damage
-					properties.health -= weapon.damage;
+					prop.DealDamage (weapon.damage);
 				}
 			}
 		}
 	}
 
-	void Shoot () {
+	[Command]
+	void CmdShoot (Vector3 pos, Vector3 dir) {
 		RaycastHit hit;
-		if (Physics.Raycast (camera.transform.position, camera.transform.forward, out hit, 100.0f)) {
+		Debug.DrawRay(pos, dir * 100.0f, Color.red, 100.0f);
+		if (Physics.Raycast (pos, dir, out hit, 100.0f)) {
 			Vector3 direction = hit.point - transform.position;
-			if (Physics.Raycast (transform.position, direction, out hit, 100.0f))
-				print ("Found an object - distance: " + hit.point);
+			Debug.DrawRay(transform.position, direction * 100.0f, Color.green, 100.0f);
+			if (Physics.Raycast (transform.position, direction, out hit, 100.0f)) {
+				if (hit.collider.tag == "Player" || hit.collider.tag == "NPC") {
+					// Get character's properties
+					CharacterProperties prop = hit.collider.GetComponent<CharacterProperties> ();
+
+					// Apply damage
+					prop.DealDamage (weapon.damage);
+				}
+			}
 		}
 	}
 
 	void HandleInput () {
 		// Handle axis input
-		transform.Rotate(Vector3.up, Input.GetAxis("Mouse X"));
-		virtualCamera.transform.RotateAround(transform.position, transform.right, -Input.GetAxis("Mouse Y"));
+		if (hasFocus) {
+			transform.Rotate (Vector3.up, Input.GetAxis ("Mouse X"));
+			virtualCamera.transform.RotateAround (transform.position, transform.right, -Input.GetAxis ("Mouse Y"));
+		}
 
 		// Handle key input
 		if (Input.GetKey (KeyCode.W))
@@ -100,12 +112,12 @@ public class PlayerController : NetworkBehaviour {
 		if (Input.GetKeyDown (KeyCode.Mouse0))
 			Attack ();
 	}
-
-	void UpdateCamera () {
-	}
 	
 	// Update is called once per frame
 	void Update () {
+		if (!isLocalPlayer)
+			return;
+		
 		// Reset horizontal velocity
 		velocity = new Vector3(0, controller.velocity.y, 0);
 
@@ -136,5 +148,10 @@ public class PlayerController : NetworkBehaviour {
 		// Move camera
 		if (camera)
 			camera.transform.SetPositionAndRotation (virtualCamera.transform.position, virtualCamera.transform.rotation);
+	}
+
+	void OnApplicationFocus(bool focus)
+	{
+		hasFocus = focus;
 	}
 }

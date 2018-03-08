@@ -84,7 +84,7 @@ public class NewBehaviourScript : NetworkBehaviour
 
     private void GoToDestination()
     {
-        if(currentIndex != null && Waypoints != null)
+        if(Waypoints != null)
         {
             Vector3 targetVector = Waypoints[currentIndex].transform.position;
             _navMeshAgent.SetDestination(targetVector);
