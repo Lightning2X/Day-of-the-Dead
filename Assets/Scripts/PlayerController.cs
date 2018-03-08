@@ -44,17 +44,17 @@ public class PlayerController : NetworkBehaviour {
 	}
 
 	[Command]
-	void CmdStab (Vector3 dir) {
+	void CmdStab (Vector3 direction) {
 		// Check if there are any colliders inside a given sphere
-		Collider[] collisions = Physics.OverlapSphere(transform.position, weapon.attackRange);
+		Collider[] colls = Physics.OverlapSphere(transform.position, weapon.attackRange);
 
-		foreach (Collider coll in collisions) {
+		foreach (Collider coll in colls) {
 			// Is the collider a character?
 			Debug.Log((coll.tag == "Player" || coll.tag == "NPC"));
 			if (coll.gameObject != gameObject && (coll.tag == "Player" || coll.tag == "NPC")){
 				// calculate angle between character and forward direction
 				Vector3 delta = coll.transform.position - transform.position;
-				float angle = Vector3.Angle(dir, delta);
+				float angle = Vector3.Angle(direction, delta);
 
 				// is the attack aimed close enough to the character?
 				if (angle <= weapon.spread * 0.5f) {
@@ -69,13 +69,13 @@ public class PlayerController : NetworkBehaviour {
 	}
 
 	[Command]
-	void CmdShoot (Vector3 pos, Vector3 dir) {
+	void CmdShoot (Vector3 position, Vector3 direction) {
 		RaycastHit hit;
-		Debug.DrawRay(pos, dir * 100.0f, Color.red, 100.0f);
-		if (Physics.Raycast (pos, dir, out hit, 100.0f)) {
-			Vector3 direction = hit.point - transform.position;
-			Debug.DrawRay(transform.position, direction * 100.0f, Color.green, 100.0f);
-			if (Physics.Raycast (transform.position, direction, out hit, 100.0f)) {
+		Debug.DrawRay(position, direction * 100.0f, Color.red, 100.0f);
+		if (Physics.Raycast (position, direction, out hit, 100.0f)) {
+			Vector3 dir = hit.point - transform.position;
+			Debug.DrawRay(transform.position, dir * 100.0f, Color.green, 100.0f);
+			if (Physics.Raycast (transform.position, dir, out hit, 100.0f)) {
 				if (hit.collider.tag == "Player" || hit.collider.tag == "NPC") {
 					// Get character's properties
 					CharacterProperties prop = hit.collider.GetComponent<CharacterProperties> ();

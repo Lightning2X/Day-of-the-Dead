@@ -10,7 +10,7 @@ public class CharacterProperties : NetworkBehaviour {
 	public int _health = 1;
 
 
-	/*public int health {
+	public int health {
 		get {
 			return _health;
 		}
@@ -21,7 +21,7 @@ public class CharacterProperties : NetworkBehaviour {
 			else
 				isAlive = true;
 		}
-	}*/
+	}
 
 	[ClientRpc]
 	void RpcDamage (int amount)
@@ -34,7 +34,9 @@ public class CharacterProperties : NetworkBehaviour {
 		if (!isServer)
 			return;
 
-		_health -= amount;
-		RpcDamage (amount);
+		health -= amount;
+
+		if (!isAlive)
+			NetworkServer.Destroy (gameObject);
 	}
 }
