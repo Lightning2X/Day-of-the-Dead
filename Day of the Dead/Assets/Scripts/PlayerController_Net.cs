@@ -67,6 +67,7 @@ public class PlayerController_Net : NetworkBehaviour {
         {
             meshRenderer.enabled = false;
             movementSpeed = 3 * movementSpeed;
+            StartCoroutine(SmokeBombHandler());
             //Add effect etc under here
         }
         moveDirection.y -= gravity * Time.deltaTime;
@@ -74,15 +75,7 @@ public class PlayerController_Net : NetworkBehaviour {
         CameraMover();
     }
 
-    private void SmokeBombHandler()
-    {
-        if(!meshRenderer.enabled)
-        {
-            StartCoroutine(SmokeBombCountDown());
-        }
-    }
-
-    IEnumerator SmokeBombCountDown()
+    IEnumerator SmokeBombHandler()
     {
         yield return new WaitForSecondsRealtime(smokeBombTime);
         meshRenderer.enabled = true;
