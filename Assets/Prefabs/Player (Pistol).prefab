@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4471244645382496}
   - component: {fileID: 114165887141201362}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Pistol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 33792854563305852}
   - component: {fileID: 65573460792634992}
   - component: {fileID: 23678572894076176}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53,7 +53,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4291096403855848}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Virtual Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,7 +71,7 @@ GameObject:
   - component: {fileID: 33875208908984132}
   - component: {fileID: 65151269044199192}
   - component: {fileID: 23245434526810634}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 33240553115110928}
   - component: {fileID: 65800641646385138}
   - component: {fileID: 23228225361563916}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 33870542037846416}
   - component: {fileID: 65096556092060344}
   - component: {fileID: 23716874243855564}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -129,7 +129,7 @@ GameObject:
   - component: {fileID: 114908332871673928}
   - component: {fileID: 114715678118920894}
   - component: {fileID: 114564699740074130}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player (Pistol)
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 33417349456149674}
   - component: {fileID: 65999613619383156}
   - component: {fileID: 23564420605293620}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -583,8 +583,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMelee: 0
+  ammo: 3
   damage: 1
-  attackRange: 45
+  range: 50
   spread: 6
 --- !u!114 &114235843990747514
 MonoBehaviour:

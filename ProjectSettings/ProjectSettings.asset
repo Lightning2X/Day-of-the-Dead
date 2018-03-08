@@ -639,9 +639,9 @@ PlayerSettings:
     UNet: 1
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 2
-  cloudProjectId: 84d01214-531e-4d05-af32-184d9bd15e99
-  projectName: Day of the Dead (1)
-  organizationId: lightning2x
+  cloudProjectId: 6f93e08c-9f62-4403-b6c1-b53ab00af53d
+  projectName: Day of the Dead
+  organizationId: jacco-van-mourik
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

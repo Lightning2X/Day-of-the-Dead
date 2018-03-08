@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
+//using UnityEditor;
 
 public class WeaponProperties : MonoBehaviour {
 	public bool isMelee = false;
@@ -12,7 +12,7 @@ public class WeaponProperties : MonoBehaviour {
 
 }
 
-[CustomEditor(typeof(WeaponProperties))]
+/*[CustomEditor(typeof(WeaponProperties))]
 public class WeaponPropertiesEditor : Editor
 {
 	public override void OnInspectorGUI()
@@ -25,7 +25,5 @@ public class WeaponPropertiesEditor : Editor
 		weaponProperties.damage = EditorGUILayout.IntSlider("Damage", weaponProperties.damage , 1, 100);
 		weaponProperties.range = EditorGUILayout.FloatField("Range", weaponProperties.range);
 		weaponProperties.spread = EditorGUILayout.FloatField("Spread", weaponProperties.spread);
-
-
 	}
-}
+}*/

@@ -15,7 +15,7 @@ public class PlayerController : NetworkBehaviour {
 	private CharacterController controller;
 	private CharacterProperties properties;
 
-	private Camera camera;
+	private Camera mainCam;
 
 	private Vector3 velocity;
 	private Vector3 direction;
@@ -28,10 +28,10 @@ public class PlayerController : NetworkBehaviour {
 		controller = GetComponent<CharacterController>();
 		properties = GetComponent<CharacterProperties>();
 		
-		camera = Camera.main;
+		mainCam = Camera.main;
 
-		Cursor.lockState = CursorLockMode.Locked;
-		Cursor.visible = false;
+		//Cursor.lockState = CursorLockMode.Locked;
+		//Cursor.visible = false;
 	}
 
 	void Attack () {
@@ -55,10 +55,10 @@ public class PlayerController : NetworkBehaviour {
 
 				// is the attack aimed close enough to the character?
 				if (angle <= weapon.spread * 0.5f) {
-					// Get character's properties
+					// Get other character's properties
 					CharacterProperties prop = coll.GetComponent<CharacterProperties> ();
 
-					// Apply damage
+					// Apply damage to other character
 					prop.DealDamage (weapon.damage);
 				}
 			}
@@ -67,22 +67,36 @@ public class PlayerController : NetworkBehaviour {
 
 	[Command]
 	void CmdShoot (Vector3 position, Vector3 direction) {
+		// Does the weapon have ammo left?
 		if (weapon.ammo <= 0)
 			return;
 
+		// Decrement ammo amount
 		weapon.ammo--;
 
+		// Hit object output from raycasts
 		RaycastHit hit;
+
+		// Draw debug ray from the camera to the reticle
 		Debug.DrawRay(position, direction.normalized * 100.0f, Color.red, 100.0f);
+
+		// Do raycast from the camera to the reticle
 		if (Physics.Raycast (position, direction, out hit, 100.0f)) {
+			// Calculate direction from character to the hit position
 			Vector3 dir = hit.point - transform.position;
+
+			// Draw debug ray from the character to the hit position
 			Debug.DrawRay(transform.position, dir.normalized * weapon.range, Color.green, 100.0f);
+
+			// Do raycast from the character to the hit position
 			if (Physics.Raycast (transform.position, dir, out hit, weapon.range)) {
+
+				// Do we hit another character?
 				if (hit.collider.tag == "Player" || hit.collider.tag == "NPC") {
-					// Get character's properties
+					// Get other character's properties
 					CharacterProperties prop = hit.collider.GetComponent<CharacterProperties> ();
 
-					// Apply damage
+					// Apply damage to other character
 					prop.DealDamage (weapon.damage);
 				}
 			}
@@ -148,8 +162,8 @@ public class PlayerController : NetworkBehaviour {
 		controller.Move (velocity * Time.deltaTime);
 
 		// Move camera
-		if (camera)
-			camera.transform.SetPositionAndRotation (virtualCamera.transform.position, virtualCamera.transform.rotation);
+		if (mainCam)
+			mainCam.transform.SetPositionAndRotation (virtualCamera.transform.position, virtualCamera.transform.rotation);
 	}
 
 	void OnApplicationFocus(bool focus)
