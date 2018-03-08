@@ -1,7 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day of the Dead", "Assembly-CSharp.csproj", "{78892F6A-4A8D-6BF4-D726-3758F5E24780}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2017
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day of the Dead", "Day of the Dead.csproj", "{0AE0E071-15F7-D0B9-21D2-5E8C6CFD7287}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,15 +9,12 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{78892F6A-4A8D-6BF4-D726-3758F5E24780}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{78892F6A-4A8D-6BF4-D726-3758F5E24780}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{78892F6A-4A8D-6BF4-D726-3758F5E24780}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{78892F6A-4A8D-6BF4-D726-3758F5E24780}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AE0E071-15F7-D0B9-21D2-5E8C6CFD7287}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AE0E071-15F7-D0B9-21D2-5E8C6CFD7287}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AE0E071-15F7-D0B9-21D2-5E8C6CFD7287}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AE0E071-15F7-D0B9-21D2-5E8C6CFD7287}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Assembly-CSharp.csproj
 	EndGlobalSection
 EndGlobal
