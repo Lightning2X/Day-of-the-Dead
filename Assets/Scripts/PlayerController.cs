@@ -12,7 +12,6 @@ public class PlayerController : NetworkBehaviour {
 	[SerializeField] GameObject virtualCamera;
 	[SerializeField] WeaponProperties weapon;
 
-	private Collider collider;
 	private CharacterController controller;
 	private CharacterProperties properties;
 
@@ -26,14 +25,13 @@ public class PlayerController : NetworkBehaviour {
 
 	// Initialization
 	void Start () {
-		collider = GetComponent<Collider>();
 		controller = GetComponent<CharacterController>();
 		properties = GetComponent<CharacterProperties>();
 		
 		camera = Camera.main;
 
-		//Cursor.lockState = CursorLockMode.Locked;
-		//Cursor.visible = false;
+		Cursor.lockState = CursorLockMode.Locked;
+		Cursor.visible = false;
 	}
 
 	void Attack () {
@@ -46,11 +44,10 @@ public class PlayerController : NetworkBehaviour {
 	[Command]
 	void CmdStab (Vector3 direction) {
 		// Check if there are any colliders inside a given sphere
-		Collider[] colls = Physics.OverlapSphere(transform.position, weapon.attackRange);
+		Collider[] colls = Physics.OverlapSphere(transform.position, weapon.range);
 
 		foreach (Collider coll in colls) {
 			// Is the collider a character?
-			Debug.Log((coll.tag == "Player" || coll.tag == "NPC"));
 			if (coll.gameObject != gameObject && (coll.tag == "Player" || coll.tag == "NPC")){
 				// calculate angle between character and forward direction
 				Vector3 delta = coll.transform.position - transform.position;
@@ -70,12 +67,17 @@ public class PlayerController : NetworkBehaviour {
 
 	[Command]
 	void CmdShoot (Vector3 position, Vector3 direction) {
+		if (weapon.ammo <= 0)
+			return;
+
+		weapon.ammo--;
+
 		RaycastHit hit;
-		Debug.DrawRay(position, direction * 100.0f, Color.red, 100.0f);
+		Debug.DrawRay(position, direction.normalized * 100.0f, Color.red, 100.0f);
 		if (Physics.Raycast (position, direction, out hit, 100.0f)) {
 			Vector3 dir = hit.point - transform.position;
-			Debug.DrawRay(transform.position, dir * 100.0f, Color.green, 100.0f);
-			if (Physics.Raycast (transform.position, dir, out hit, 100.0f)) {
+			Debug.DrawRay(transform.position, dir.normalized * weapon.range, Color.green, 100.0f);
+			if (Physics.Raycast (transform.position, dir, out hit, weapon.range)) {
 				if (hit.collider.tag == "Player" || hit.collider.tag == "NPC") {
 					// Get character's properties
 					CharacterProperties prop = hit.collider.GetComponent<CharacterProperties> ();
