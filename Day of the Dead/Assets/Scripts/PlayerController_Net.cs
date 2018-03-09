@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 
 public class PlayerController_Net : NetworkBehaviour {
     private const float defaultMovementSpeed = 0.3f;
-    private const float smokeBombTime = 1f;
+    private const float smokeBombTime = 3f;
     private float movementSpeed;
     private float sprintAmplify = 1.5F;
     private float jumpSpeed = 15F;
