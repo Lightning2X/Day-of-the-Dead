@@ -7976,6 +7976,7 @@ MonoBehaviour:
   matchSize: 4
   isNetworkActive: 0
   matchMaker: {fileID: 0}
+  players: []
 --- !u!4 &1667845206 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4760579913503350, guid: 102cf1a755427854bb5114760589e9fe,
@@ -9833,7 +9834,7 @@ GameObject:
   - component: {fileID: 2026167251}
   - component: {fileID: 2026167250}
   m_Layer: 5
-  m_Name: UI
+  m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
