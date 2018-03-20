@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33097584285972022}
   - component: {fileID: 65612371523852382}
   - component: {fileID: 23072247960691340}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 33372677781746340}
   - component: {fileID: 65057457413392700}
   - component: {fileID: 23959638440461788}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,7 +55,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4780423616933736}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Virtual Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 33110852580643356}
   - component: {fileID: 65278852518146108}
   - component: {fileID: 23093521371451976}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -89,7 +89,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4631832394240770}
   - component: {fileID: 114679772172041764}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Knife
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,7 +111,7 @@ GameObject:
   - component: {fileID: 114300404905459138}
   - component: {fileID: 114235891453207128}
   - component: {fileID: 114551714221680342}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player (Knife)
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -496,8 +496,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMelee: 1
+  ammo: 3
   damage: 1
-  attackRange: 5
+  range: 5
   spread: 90
 --- !u!143 &143124271669922806
 CharacterController:
@@ -512,7 +513,7 @@ CharacterController:
   m_Height: 2
   m_Radius: 0.5
   m_SlopeLimit: 45
-  m_StepOffset: 0.3
+  m_StepOffset: 0.4
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.AI;
 
-public class NPCMovement : NetworkBehaviour
+public class NewBehaviourScript : NetworkBehaviour
 {
     public GameObject[] Waypoints;
 

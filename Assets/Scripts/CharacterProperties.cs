@@ -10,12 +10,12 @@ public class CharacterProperties : NetworkBehaviour {
     public string bottomAttribute;
     public GameObject Target;
     AttributeList attributeList;
-    PlayerList playerList;
-	[SyncVar]
+    NetworkController networkController;
+    [SyncVar]
 	public int _health = 1;
 
 
-	/*public int health {
+	public int health {
 		get {
 			return _health;
 		}
@@ -26,7 +26,7 @@ public class CharacterProperties : NetworkBehaviour {
 			else
 				isAlive = true;
 		}
-	}*/
+	}
 
 	[ClientRpc]
 	void RpcDamage (int amount)
@@ -39,23 +39,31 @@ public class CharacterProperties : NetworkBehaviour {
 		if (!isServer)
 			return;
 
-		_health -= amount;
-		RpcDamage (amount);
+		health -= amount;
+
+		if (!isAlive)
+			NetworkServer.Destroy (gameObject);
 	}
+
     void Start()
     {
-        GameObject attributeController = GameObject.Find("AttributeController");
+       /* GameObject attributeController = GameObject.Find("AttributeController");
         attributeList = attributeController.GetComponent<AttributeList>();
-        GameObject playerListController = GameObject.Find("PlayerList");
-        playerList = playerListController.GetComponent<PlayerList>();
+        GameObject playerListController = GameObject.Find("Network Manager");
+        networkController = playerListController.GetComponent<NetworkController>();
         getAttributes();
-        getTarget();
+        getTarget();*/
     }
     private void getAttributes()
     {
+        /*if (!isLocalPlayer)
+        {
+            return;
+        }*/
         int randomNumber = Random.Range(0, attributeList.topAttributes.Count);
         Debug.Log(attributeList.topAttributes[0]);
         topAttribute = attributeList.topAttributes[randomNumber];
+        Debug.Log(topAttribute);
         attributeList.topAttributes.RemoveAt(randomNumber);
         randomNumber = Random.Range(0, attributeList.middleAttributes.Count);
         middleAttribute = attributeList.middleAttributes[randomNumber];
@@ -67,16 +75,20 @@ public class CharacterProperties : NetworkBehaviour {
 
     private void getTarget()
     {
-        int randomNumber = Random.Range(0, playerList.Players.Count);
-        Debug.Log("list length according to properties: " + playerList.Players.Count);
-        Target = playerList.Players[randomNumber];
+        /*if (!isLocalPlayer)
+        {
+            return;
+        }*/
+        int randomNumber = Random.Range(0, networkController.players.Count);
+        Debug.Log("list length according to properties: " + networkController.players.Count);
+        Target = networkController.players[randomNumber];
         if (Target == gameObject)
         {
             getTarget();
         }
         else
         {
-            playerList.Players.RemoveAt(randomNumber);
+            networkController.players.RemoveAt(randomNumber);
         }
     }
 }

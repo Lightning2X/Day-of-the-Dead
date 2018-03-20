@@ -12,11 +12,10 @@ public class PlayerController : NetworkBehaviour {
 	[SerializeField] GameObject virtualCamera;
 	[SerializeField] WeaponProperties weapon;
 
-	private Collider collider;
 	private CharacterController controller;
 	private CharacterProperties properties;
 
-	private Camera camera;
+	private Camera mainCam;
 
 	private Vector3 velocity;
 	private Vector3 direction;
@@ -26,11 +25,10 @@ public class PlayerController : NetworkBehaviour {
 
 	// Initialization
 	void Start () {
-		collider = GetComponent<Collider>();
 		controller = GetComponent<CharacterController>();
 		properties = GetComponent<CharacterProperties>();
 		
-		camera = Camera.main;
+		mainCam = Camera.main;
 
 		//Cursor.lockState = CursorLockMode.Locked;
 		//Cursor.visible = false;
@@ -44,45 +42,67 @@ public class PlayerController : NetworkBehaviour {
 	}
 
 	[Command]
-	void CmdStab (Vector3 dir) {
+	void CmdStab (Vector3 direction) {
 		// Check if there are any colliders inside a given sphere
-		Collider[] collisions = Physics.OverlapSphere(transform.position, weapon.attackRange);
+		Collider[] colls = Physics.OverlapSphere(transform.position, weapon.range);
 
-		foreach (Collider coll in collisions) {
+		foreach (Collider coll in colls) {
 			// Is the collider a character?
-			Debug.Log((coll.tag == "Player" || coll.tag == "NPC"));
 			if (coll.gameObject != gameObject && (coll.tag == "Player" || coll.tag == "NPC")){
 				// calculate angle between character and forward direction
 				Vector3 delta = coll.transform.position - transform.position;
-				float angle = Vector3.Angle(dir, delta);
+				float angle = Vector3.Angle(direction, delta);
 
 				// is the attack aimed close enough to the character?
 				if (angle <= weapon.spread * 0.5f) {
-					// Get character's properties
+					// Get other character's properties
 					CharacterProperties prop = coll.GetComponent<CharacterProperties> ();
 
-					// Apply damage
+					// Apply damage to other character
 					prop.DealDamage (weapon.damage);
+                    if (!prop.isAlive)
+                        properties.Target = prop.Target;
 				}
 			}
 		}
 	}
 
 	[Command]
-	void CmdShoot (Vector3 pos, Vector3 dir) {
+	void CmdShoot (Vector3 position, Vector3 direction) {
+		// Does the weapon have ammo left?
+		if (weapon.ammo <= 0)
+			return;
+
+		// Decrement ammo amount
+		weapon.ammo--;
+
+		// Hit object output from raycasts
 		RaycastHit hit;
-		Debug.DrawRay(pos, dir * 100.0f, Color.red, 100.0f);
-		if (Physics.Raycast (pos, dir, out hit, 100.0f)) {
-			Vector3 direction = hit.point - transform.position;
-			Debug.DrawRay(transform.position, direction * 100.0f, Color.green, 100.0f);
-			if (Physics.Raycast (transform.position, direction, out hit, 100.0f)) {
+
+		// Draw debug ray from the camera to the reticle
+		Debug.DrawRay(position, direction.normalized * 100.0f, Color.red, 100.0f);
+
+		// Do raycast from the camera to the reticle
+		if (Physics.Raycast (position, direction, out hit, 100.0f)) {
+			// Calculate direction from character to the hit position
+			Vector3 dir = hit.point - transform.position;
+
+			// Draw debug ray from the character to the hit position
+			Debug.DrawRay(transform.position, dir.normalized * weapon.range, Color.green, 100.0f);
+
+			// Do raycast from the character to the hit position
+			if (Physics.Raycast (transform.position, dir, out hit, weapon.range)) {
+
+				// Do we hit another character?
 				if (hit.collider.tag == "Player" || hit.collider.tag == "NPC") {
-					// Get character's properties
+					// Get other character's properties
 					CharacterProperties prop = hit.collider.GetComponent<CharacterProperties> ();
 
-					// Apply damage
+					// Apply damage to other character
 					prop.DealDamage (weapon.damage);
-				}
+                    if (!prop.isAlive)
+                        properties.Target = prop.Target;
+                }
 			}
 		}
 	}
@@ -146,8 +166,8 @@ public class PlayerController : NetworkBehaviour {
 		controller.Move (velocity * Time.deltaTime);
 
 		// Move camera
-		if (camera)
-			camera.transform.SetPositionAndRotation (virtualCamera.transform.position, virtualCamera.transform.rotation);
+		if (mainCam)
+			mainCam.transform.SetPositionAndRotation (virtualCamera.transform.position, virtualCamera.transform.rotation);
 	}
 
 	void OnApplicationFocus(bool focus)
