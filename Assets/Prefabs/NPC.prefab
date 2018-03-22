@@ -172,6 +172,7 @@ MonoBehaviour:
   raycastLayerMask:
     serializedVersion: 2
     m_Bits: 4294967035
+  timerTime: 17.2
 --- !u!114 &114948037044403474
 MonoBehaviour:
   m_ObjectHideFlags: 1

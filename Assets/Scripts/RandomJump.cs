@@ -21,7 +21,9 @@ public class RandomJump : NetworkBehaviour
 	private Vector3 raycastOrigin;
     private float speed;
 	private float timer;
-	private bool isJumping = false;
+    [SerializeField] private float timerTime = 25;
+
+    private bool isJumping = false;
 
     // Use this for initialization
     void Start () {
@@ -30,7 +32,7 @@ public class RandomJump : NetworkBehaviour
 		behaviourScript = GetComponent<NewBehaviourScript> ();
 
 		// Set initial cooldown time
-		timer = Random.Range (5, 10);
+		timer = (Random.value * timerTime);
     }
 	
 	// Update is called once per frame
@@ -48,7 +50,7 @@ public class RandomJump : NetworkBehaviour
 		timer -= Time.deltaTime;
 
 		// Jump when timer hits 0
-		if (timer <= 0)
+		if (timer <= 0 && !isJumping)
 			Jump();
 
 		// Move player
@@ -70,7 +72,10 @@ public class RandomJump : NetworkBehaviour
 
 			// Resume pathfinding
 			behaviourScript.SetDestination (behaviourScript.currentIndex);
-		}
+
+            // Set new cooldown timer
+            timer = (Random.value * timerTime);
+        }
     }
 
     void Jump () {
@@ -83,7 +88,5 @@ public class RandomJump : NetworkBehaviour
 		// Add impulse in up direction
         velocity.y = jumpSpeed;
 
-		// Set new cooldown timer
-		timer = Random.Range(5, 10);
     }
 }
