@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 
 public class PlayerController : NetworkBehaviour {
@@ -11,6 +12,8 @@ public class PlayerController : NetworkBehaviour {
 	[SerializeField] float jumpSpeed = 20f;
 	[SerializeField] GameObject virtualCamera;
 	[SerializeField] WeaponProperties weapon;
+	public NetworkConnection localConn;
+	public Vector3 initialPosition;
 
 	private CharacterController controller;
 	private CharacterProperties properties;
@@ -169,5 +172,25 @@ public class PlayerController : NetworkBehaviour {
 	void OnApplicationFocus(bool focus)
 	{
 		hasFocus = focus;
+	}
+
+	public void Ready () {
+		CmdClientReady ();
+	}
+
+	[Command]
+	void CmdClientReady() {
+		NetworkController networkController = GameObject.Find ("Network Manager").GetComponent<NetworkController>();
+		networkController.OnServerClientReady (connectionToClient);
+	}
+
+	public void LoadPregame () {
+		RpcPregame ();
+	}
+
+	[ClientRpc]
+	void RpcPregame ()
+	{
+		SceneManager.LoadScene("PreGame", LoadSceneMode.Additive);
 	}
 }
