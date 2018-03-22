@@ -82,6 +82,11 @@ public class NewBehaviourScript : NetworkBehaviour
         GoToDestination();
     }
 
+    public void SetDestination(int i)
+    {
+        currentIndex = i;
+        GoToDestination();
+    }
     private void GoToDestination()
     {
         if(Waypoints != null)
