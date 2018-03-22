@@ -16,12 +16,13 @@ public class RandomJump : NetworkBehaviour
     private CharacterController controller;
 	private NewBehaviourScript behaviourScript;
 
-    private Vector3 velocity;
+    private Vector3 jumpVelocity;
 	private Vector3 direction;
 	private Vector3 raycastOrigin;
     private float speed;
-	private float timer;
+	private float actionTimer;
     [SerializeField] private float timerTime = 25;
+    private const float jumpChance = 20;
 
     private bool isJumping = false;
 
@@ -32,30 +33,36 @@ public class RandomJump : NetworkBehaviour
 		behaviourScript = GetComponent<NewBehaviourScript> ();
 
 		// Set initial cooldown time
-		timer = (Random.value * timerTime);
+		actionTimer = (Random.value * timerTime);
     }
 	
 	// Update is called once per frame
 	void Update () {
 		// Reset horizontal velocity
-		velocity = new Vector3 (0, controller.velocity.y, 0);
+		jumpVelocity = new Vector3 (0, controller.velocity.y, 0);
 
 		// Create forces
 		Vector3 force = new Vector3 (0, gravity, 0);
 
 		// Integrate forces to velocity
-		velocity += force * Time.deltaTime;
+		jumpVelocity += force * Time.deltaTime;
 
 		// Update timer
-		timer -= Time.deltaTime;
+		actionTimer -= Time.deltaTime;
 
-		// Jump when timer hits 0
-		if (timer <= 0 && !isJumping)
-			Jump();
+        // Jump when timer hits 0
+        if (actionTimer <= 0 && !isJumping)
+        {
+            float tempRandom = Random.value;
+            if (tempRandom <= jumpChance)
+                Jump();
+            else
+                RandomMovement();
+        }
 
-		// Move player
-		if (!agent.enabled)
-			controller.Move (velocity * Time.deltaTime);
+        // Move player
+        if (!agent.enabled)
+			controller.Move (jumpVelocity * Time.deltaTime);
 
 		// Hit object output from raycast
 		RaycastHit hit;
@@ -68,14 +75,14 @@ public class RandomJump : NetworkBehaviour
 		if (isJumping) Debug.DrawRay(raycastOrigin, -transform.up * raycastRange, Color.red, 0.1f); // debug
 		if (isJumping && Physics.Raycast (raycastOrigin, -transform.up, out hit, raycastRange, raycastLayerMask)) {
 			isJumping = false;
-			agent.enabled = true;
-
-			// Resume pathfinding
-			behaviourScript.SetDestination (behaviourScript.currentIndex);
-
-            // Set new cooldown timer
-            timer = (Random.value * timerTime);
+            ResetToAgent();
         }
+    }
+
+    private void RandomMovement()
+    {
+        behaviourScript.SetDestination(Random.Range(0, behaviourScript.Waypoints.Length));
+        actionTimer = (Random.value * timerTime);
     }
 
     void Jump () {
@@ -86,7 +93,16 @@ public class RandomJump : NetworkBehaviour
         agent.enabled = false;
 
 		// Add impulse in up direction
-        velocity.y = jumpSpeed;
+        jumpVelocity.y = jumpSpeed;
 
     }
+
+    private void ResetToAgent()
+    {
+        agent.enabled = true;
+        // Resume pathfinding
+        behaviourScript.SetDestination(behaviourScript.currentIndex);
+        actionTimer = (Random.value * timerTime);
+    }
 }
+

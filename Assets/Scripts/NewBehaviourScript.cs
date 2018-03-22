@@ -70,23 +70,6 @@ public class NewBehaviourScript : NetworkBehaviour
 
         currentIndex = UnityEngine.Random.Range(0, Waypoints.Length);
 
-        /*if (randomNumber <= 0.25)
-            {
-                currentDestination = _destination;
-            }
-            else if(randomNumber > 0.25 && randomNumber <= 0.5)
-            {
-                currentDestination = _destination2;
-            }
-            else if (randomNumber > 0.5 && randomNumber <= 0.75)
-            {
-                currentDestination = _destination3;
-            }
-            else
-            {
-                currentDestination = _destination4;
-            }*/
-
         GoToDestination();
     }
 
