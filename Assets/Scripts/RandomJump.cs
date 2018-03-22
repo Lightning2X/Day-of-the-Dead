@@ -6,60 +6,84 @@ using UnityEngine.AI;
 
 public class RandomJump : NetworkBehaviour
 {
-
-    NavMeshAgent agent;
     [SerializeField] float gravity = -100f;
     [SerializeField] float jumpSpeed = 20f;
-    [SerializeField] float moveSpeed = 10f;
+    //[SerializeField] float moveSpeed = 10f;
+	[SerializeField] float raycastRange = 0.1f;
+	[SerializeField] LayerMask raycastLayerMask;
 
+	private NavMeshAgent agent;
     private CharacterController controller;
+	private NewBehaviourScript behaviourScript;
 
     private Vector3 velocity;
-    private Vector3 direction;
+	private Vector3 direction;
+	private Vector3 raycastOrigin;
     private float speed;
-    float timer = 0;
+	private float timer;
+	private bool isJumping = false;
 
     // Use this for initialization
     void Start () {
-        agent = gameObject.GetComponent<NavMeshAgent>();
-        controller = GetComponent<CharacterController>();
+        agent = GetComponent<NavMeshAgent> ();
+        controller = GetComponent<CharacterController> ();
+		behaviourScript = GetComponent<NewBehaviourScript> ();
+
+		// Set initial cooldown time
+		timer = Random.Range (5, 10);
     }
 	
 	// Update is called once per frame
 	void Update () {
-       
-        // Reset horizontal velocity
-        velocity = new Vector3(0,controller.velocity.y,0);
+		// Reset horizontal velocity
+		velocity = new Vector3 (0, controller.velocity.y, 0);
 
-        // Create forces
-        Vector3 force = new Vector3(0, gravity, 0);
+		// Create forces
+		Vector3 force = new Vector3 (0, gravity, 0);
 
-        timer -= Time.deltaTime;
+		// Integrate forces to velocity
+		velocity += force * Time.deltaTime;
 
-        if (timer <= 0)
-        {
-            Jump();
-        }
-        // Integrate forces to velocity
-        velocity += force * Time.deltaTime;
+		// Update timer
+		timer -= Time.deltaTime;
 
-        // Move player
-        controller.Move(velocity * Time.deltaTime);
+		// Jump when timer hits 0
+		if (timer <= 0)
+			Jump();
 
-        CheckAgent();
+		// Move player
+		if (!agent.enabled)
+			controller.Move (velocity * Time.deltaTime);
+
+		// Hit object output from raycast
+		RaycastHit hit;
+
+		// Calculate feet position
+		raycastOrigin = transform.position;
+		raycastOrigin.y -= controller.height * 0.5f;
+
+		// Stop jumping when we hit the ground
+		if (isJumping) Debug.DrawRay(raycastOrigin, -transform.up * raycastRange, Color.red, 0.1f); // debug
+		if (isJumping && Physics.Raycast (raycastOrigin, -transform.up, out hit, raycastRange, raycastLayerMask)) {
+			isJumping = false;
+			agent.enabled = true;
+
+			// Resume pathfinding
+			behaviourScript.SetDestination (behaviourScript.currentIndex);
+		}
     }
 
-    void Jump()
-    {
-        bool isJumo = true;
+    void Jump () {
+		// Keep track of that we are jumping
+        isJumping = true;
+
+		// Disable NavMeshAgent so we can controll it the CharacterController
         agent.enabled = false;
-        velocity.y = jumpSpeed;
-        float i = UnityEngine.Random.Range(5, 10);
-        float timer = i;
-    }
 
-    void CheckAgent()
-    {
-       //om de navmesh weer aan te zetten
+		// Add impulse in up direction
+        velocity.y = jumpSpeed;
+
+		// Set new cooldown timer
+		timer = Random.Range(5, 10);
     }
 }

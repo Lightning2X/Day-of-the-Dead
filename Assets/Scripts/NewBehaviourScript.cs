@@ -58,6 +58,13 @@ public class NewBehaviourScript : NetworkBehaviour
         }
     }
 
+	public void SetDestination(int i)
+	{
+
+		currentIndex = i;
+		GoToDestination();
+	}
+
     private void SetDestination()
     {
 

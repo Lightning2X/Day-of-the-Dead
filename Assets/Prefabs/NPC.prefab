@@ -154,8 +154,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Waypoints: []
-  gravity: -100
-  jumpSpeed: 20
   currentIndex: 0
 --- !u!114 &114772247239886464
 MonoBehaviour:
@@ -170,7 +168,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravity: -100
   jumpSpeed: 20
-  moveSpeed: 10
+  raycastRange: 0.2
+  raycastLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967035
 --- !u!114 &114948037044403474
 MonoBehaviour:
   m_ObjectHideFlags: 1
