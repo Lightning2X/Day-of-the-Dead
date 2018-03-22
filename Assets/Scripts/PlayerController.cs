@@ -153,15 +153,18 @@ public class PlayerController : NetworkBehaviour {
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             weapon = knife.GetComponent<WeaponProperties>();
+            
             knife.SetActive(true);
             pistol.SetActive(false);
             unarmed.SetActive(false);
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
             weapon = pistol.GetComponent<WeaponProperties>();
             knife.SetActive(false);
             pistol.SetActive(true);
             unarmed.SetActive(false);
+        }
     }
 
 	// Update is called once per frame
