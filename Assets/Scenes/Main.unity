@@ -3723,6 +3723,7 @@ MonoBehaviour:
   topAttributes: []
   middleAttributes: []
   bottomAttributes: []
+  amountTypesAttributes: 4
 --- !u!4 &641446568
 Transform:
   m_ObjectHideFlags: 0
@@ -7990,7 +7991,7 @@ MonoBehaviour:
   m_ScriptCRCCheck: 1
   m_MaxDelay: 0.01
   m_LogLevel: 2
-  m_PlayerPrefab: {fileID: 1639665788208708, guid: eb3b37b2af42a4caf99913e951818cdf,
+  m_PlayerPrefab: {fileID: 1810186529282726, guid: 6c04292398552924e94a17e67ca37ebe,
     type: 2}
   m_AutoCreatePlayer: 1
   m_PlayerSpawnMethod: 1
@@ -8054,6 +8055,7 @@ MonoBehaviour:
   isNetworkActive: 0
   matchMaker: {fileID: 0}
   players: []
+  characters: []
 --- !u!114 &1657293180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8068,6 +8070,7 @@ MonoBehaviour:
   topAttributes: []
   middleAttributes: []
   bottomAttributes: []
+  amountTypesAttributes: 4
 --- !u!4 &1667845206 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4760579913503350, guid: 102cf1a755427854bb5114760589e9fe,

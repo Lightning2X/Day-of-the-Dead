@@ -10,7 +10,11 @@ public class PlayerController : NetworkBehaviour {
 	[SerializeField] float sprintSpeed = 18f;
 	[SerializeField] float jumpSpeed = 20f;
 	[SerializeField] GameObject virtualCamera;
-	[SerializeField] WeaponProperties weapon;
+    [SerializeField] WeaponProperties weapon;
+
+    [SerializeField] GameObject unarmed;
+    [SerializeField] GameObject knife;
+    [SerializeField] GameObject pistol;
 
 	private CharacterController controller;
 	private CharacterProperties properties;
@@ -25,6 +29,9 @@ public class PlayerController : NetworkBehaviour {
 
 	// Initialization
 	void Start () {
+        weapon = unarmed.GetComponent<WeaponProperties>();
+        knife.SetActive(false);
+        pistol.SetActive(false);
 		controller = GetComponent<CharacterController>();
 		properties = GetComponent<CharacterProperties>();
 		
@@ -53,16 +60,19 @@ public class PlayerController : NetworkBehaviour {
 				Vector3 delta = coll.transform.position - transform.position;
 				float angle = Vector3.Angle(direction, delta);
 
-				// is the attack aimed close enough to the character?
-				if (angle <= weapon.spread * 0.5f) {
-					// Get other character's properties
-					CharacterProperties prop = coll.GetComponent<CharacterProperties> ();
+                // is the attack aimed close enough to the character?
+                if (angle <= weapon.spread * 0.5f)
+                {
+                    // Get other character's properties
+                    CharacterProperties prop = coll.GetComponent<CharacterProperties>();
 
-					// Apply damage to other character
-					prop.DealDamage (weapon.damage);
+                    // Apply damage to other character
+                    prop.DealDamage(weapon.damage);
                     if (!prop.isAlive)
+                    {
                         properties.Target = prop.Target;
-				}
+                    }
+                }
 			}
 		}
 	}
@@ -101,7 +111,9 @@ public class PlayerController : NetworkBehaviour {
 					// Apply damage to other character
 					prop.DealDamage (weapon.damage);
                     if (!prop.isAlive)
+                    {
                         properties.Target = prop.Target;
+                    }
                 }
 			}
 		}
@@ -131,8 +143,27 @@ public class PlayerController : NetworkBehaviour {
 			velocity.y = jumpSpeed;
 		if (Input.GetKeyDown (KeyCode.Mouse0))
 			Attack ();
-	}
-	
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            weapon = unarmed.GetComponent<WeaponProperties>();
+            unarmed.SetActive(true);
+            pistol.SetActive(false);
+            knife.SetActive(false);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            weapon = knife.GetComponent<WeaponProperties>();
+            knife.SetActive(true);
+            pistol.SetActive(false);
+            unarmed.SetActive(false);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+            weapon = pistol.GetComponent<WeaponProperties>();
+            knife.SetActive(false);
+            pistol.SetActive(true);
+            unarmed.SetActive(false);
+    }
+
 	// Update is called once per frame
 	void Update () {
 		if (!isLocalPlayer)

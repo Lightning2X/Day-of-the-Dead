@@ -140,6 +140,7 @@ public class NetworkController : NetworkManager {
             }*/
             for(int i = 0; i < players.Count; i++)
             {
+
                 characterProperties = players[i].GetComponent<CharacterProperties>();
                 if(i != players.Count - 1)
                 {
@@ -148,6 +149,11 @@ public class NetworkController : NetworkManager {
                 else
                 {
                     characterProperties.Target = players[0];
+                }
+                if (i == 0)
+                {
+                    CharacterProperties cprop = players[i + 1].GetComponent<CharacterProperties>();
+                    Debug.Log(cprop.topAttribute);
                 }
             }
         }

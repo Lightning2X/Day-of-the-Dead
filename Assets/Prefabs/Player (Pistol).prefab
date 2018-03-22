@@ -604,6 +604,9 @@ MonoBehaviour:
   jumpSpeed: 20
   virtualCamera: {fileID: 1298310560744502}
   weapon: {fileID: 114165887141201362}
+  unarmed: {fileID: 114132808173675068, guid: a32ea88354b5589449d7e959ba22160d, type: 2}
+  melee: {fileID: 114715656437349768, guid: 31383b4cd2036497e964b8efde731eda, type: 2}
+  gun: {fileID: 114865897086140092, guid: 48590bc4b1b2a4ccc917c0e2ad77f626, type: 2}
 --- !u!114 &114564699740074130
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -669,6 +672,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isAlive: 1
+  topAttribute: 
+  middleAttribute: 
+  bottomAttribute: 
+  Target: {fileID: 0}
   _health: 1
 --- !u!143 &143793471959185120
 CharacterController:
