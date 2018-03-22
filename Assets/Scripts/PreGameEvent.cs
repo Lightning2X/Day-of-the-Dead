@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
 
 public class PreGameEvent : MonoBehaviour {
 
@@ -18,7 +19,15 @@ public class PreGameEvent : MonoBehaviour {
 	private bool[] ddReady = new bool[] {false, false, false, false};
 
 	public void OnButtonClick () {
-		SceneManager.LoadScene("Main");
+		GameObject[] players = GameObject.FindGameObjectsWithTag ("Player");
+		for (int i = 0; i < players.Length; i++) {
+			PlayerController pc = players [i].GetComponent<PlayerController> ();
+			if (pc.hasAuthority) {
+				pc.Ready ();
+			}
+
+		}
+		SceneManager.UnloadSceneAsync("PreGame");
 	}
 
 	public void OnD1Changed (Dropdown dropdown) {

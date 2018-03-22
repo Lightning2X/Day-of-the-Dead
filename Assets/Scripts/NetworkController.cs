@@ -3,9 +3,41 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class NetworkController : NetworkManager {
+public class Client {
+	public NetworkConnection connection;
+	public GameObject player;
+	public bool ready = false;
 
-	public List<GameObject> players = new List<GameObject>();
+	public Client (NetworkConnection conn, GameObject plyr) {
+		connection = conn;
+		player = plyr;
+	}
+}
+
+public class NetworkController : NetworkManager {
+	public List<Client> clients = new List<Client>();
+
+	[SerializeField] int minPlayerCount = 2;
+
+	public void OnServerClientReady(NetworkConnection conn) {
+		bool allReady = true;
+		for (int i = 0; i < clients.Count; i++) {
+			if (clients [i].connection.connectionId == conn.connectionId){
+				clients [i].ready = true;
+			}
+			if (!clients [i].ready)
+				allReady = false;
+		}
+		if (allReady)
+			OnServerClientsReady ();
+	}
+
+	private void OnServerClientsReady() {
+		Debug.Log ("spel gestart");
+		for (int i = 0; i < clients.Count; i++) {
+			clients [i].player.transform.position = clients [i].player.GetComponent<PlayerController> ().initialPosition;
+		}
+	}
 
 	public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
 	{
@@ -37,25 +69,43 @@ public class NetworkController : NetworkManager {
 		{
 			player = (GameObject)Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
 		}
-			
-		players.Add (player);
 
-		Debug.Log (players.Count);
+		player.GetComponent<PlayerController>().localConn = conn;
+		player.GetComponent<PlayerController>().initialPosition = player.transform.position;
+
+		Client client = new Client (conn, player);
+
+		clients.Add (client);
 
 		NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);
+
+		if (clients.Count >= minPlayerCount)
+			player.GetComponent<PlayerController> ().LoadPregame ();
 	}
 
 	public override void OnServerDisconnect(NetworkConnection conn)
 	{
-		for (int i = 0; i < conn.playerControllers.Count; i++) {
-			players.Remove (conn.playerControllers[i].gameObject);
+		for (int i = 0; i < clients.Count; i++) {
+			if (clients [i].connection.connectionId == conn.connectionId)
+				clients.RemoveAt (i);
 		}
-		Debug.Log (players.Count);
 
 		NetworkServer.DestroyPlayersForConnection(conn);
 	}
 
 	public override void OnStopServer() {
-		players = new List<GameObject>();
+		clients = new List<Client>();
+	}
+
+	public override void OnClientConnect(NetworkConnection conn)
+	{
+		base.OnClientConnect (conn);
+
+	}
+
+	public override void OnClientDisconnect(NetworkConnection conn)
+	{
+		base.OnClientDisconnect (conn);
 	}
 }
+
