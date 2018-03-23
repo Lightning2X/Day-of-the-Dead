@@ -12,6 +12,10 @@ public class PlayerController : NetworkBehaviour {
 	[SerializeField] float jumpSpeed = 20f;
 	[SerializeField] GameObject virtualCamera;
 	[SerializeField] WeaponProperties weapon;
+
+	[SerializeField] GameObject unarmed;
+	[SerializeField] GameObject knife;
+	[SerializeField] GameObject pistol;
 	public NetworkConnection localConn;
 	public Vector3 initialPosition;
 
@@ -28,9 +32,12 @@ public class PlayerController : NetworkBehaviour {
 
 	// Initialization
 	void Start () {
+		weapon = unarmed.GetComponent<WeaponProperties>();
+		knife.SetActive(false);
+		pistol.SetActive(false);
 		controller = GetComponent<CharacterController>();
 		properties = GetComponent<CharacterProperties>();
-		
+
 		mainCam = Camera.main;
 
 		//Cursor.lockState = CursorLockMode.Locked;
@@ -63,6 +70,8 @@ public class PlayerController : NetworkBehaviour {
 
 					// Apply damage to other character
 					prop.DealDamage (weapon.damage);
+					if (!prop.isAlive)
+							properties.target = prop.target;
 				}
 			}
 		}
@@ -101,6 +110,8 @@ public class PlayerController : NetworkBehaviour {
 
 					// Apply damage to other character
 					prop.DealDamage (weapon.damage);
+					if (!prop.isAlive)
+							properties.target = prop.target;
 				}
 			}
 		}
@@ -130,13 +141,36 @@ public class PlayerController : NetworkBehaviour {
 			velocity.y = jumpSpeed;
 		if (Input.GetKeyDown (KeyCode.Mouse0))
 			Attack ();
+
+		if (Input.GetKeyDown(KeyCode.Alpha1))
+		{
+				weapon = unarmed.GetComponent<WeaponProperties>();
+				unarmed.SetActive(true);
+				pistol.SetActive(false);
+				knife.SetActive(false);
+		}
+		if (Input.GetKeyDown(KeyCode.Alpha2))
+		{
+				weapon = knife.GetComponent<WeaponProperties>();
+
+				knife.SetActive(true);
+				pistol.SetActive(false);
+				unarmed.SetActive(false);
+		}
+		if (Input.GetKeyDown(KeyCode.Alpha3))
+		{
+				weapon = pistol.GetComponent<WeaponProperties>();
+				knife.SetActive(false);
+				pistol.SetActive(true);
+				unarmed.SetActive(false);
+		}
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		if (!isLocalPlayer)
 			return;
-		
+
 		// Reset horizontal velocity
 		velocity = new Vector3(0, controller.velocity.y, 0);
 
@@ -157,10 +191,10 @@ public class PlayerController : NetworkBehaviour {
 			velocity.x = direction.x * speed;
 			velocity.z = direction.z * speed;
 		}
-			
+
 		// Integrate forces to velocity
 		velocity += force * Time.deltaTime;
-		
+
 		// Move player
 		controller.Move (velocity * Time.deltaTime);
 

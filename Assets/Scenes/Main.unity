@@ -7858,6 +7858,7 @@ GameObject:
   - component: {fileID: 1657293176}
   - component: {fileID: 1657293178}
   - component: {fileID: 1657293177}
+  - component: {fileID: 1657293179}
   m_Layer: 0
   m_Name: Network Manager
   m_TagString: Untagged
@@ -7913,7 +7914,7 @@ MonoBehaviour:
   m_ScriptCRCCheck: 1
   m_MaxDelay: 0.01
   m_LogLevel: 2
-  m_PlayerPrefab: {fileID: 1056563999784166, guid: eb3b37b2af42a4caf99913e951818cdf,
+  m_PlayerPrefab: {fileID: 1912583502988280, guid: eb3b37b2af42a4caf99913e951818cdf,
     type: 2}
   m_AutoCreatePlayer: 1
   m_PlayerSpawnMethod: 1
@@ -7976,7 +7977,24 @@ MonoBehaviour:
   matchSize: 4
   isNetworkActive: 0
   matchMaker: {fileID: 0}
+  characters: []
+  players: []
   minPlayerCount: 2
+--- !u!114 &1657293179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1657293175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6633f41407cb04d90b4ac91073fead03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topAttributes: 
+  middleAttributes: 
+  bottomAttributes: 
+  amountTypesAttributes: 4
 --- !u!4 &1667845206 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4760579913503350, guid: 102cf1a755427854bb5114760589e9fe,

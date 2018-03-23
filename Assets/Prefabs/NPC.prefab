@@ -337,6 +337,8 @@ MonoBehaviour:
   head: {fileID: 1288774791114284}
   torso: {fileID: 1845460455895150}
   legs: {fileID: 1137758350909184}
+  attributes: 000000000000000000000000
+  target: {fileID: 0}
   _health: 1
 --- !u!114 &114690916818577776
 MonoBehaviour:

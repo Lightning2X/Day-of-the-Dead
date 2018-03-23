@@ -10,6 +10,9 @@ public class CharacterProperties : NetworkBehaviour {
     [SerializeField] GameObject torso;
     [SerializeField] GameObject legs;
 
+	public int[] attributes = new int[] {0, 0, 0};
+    public GameObject target;
+
     [SyncVar]
 	public int _health = 1;
 
@@ -37,11 +40,11 @@ public class CharacterProperties : NetworkBehaviour {
 			NetworkServer.Destroy (gameObject);
 	}
 
-    public void SetColors(int[] colorIndexes)
+    public void SetColors()
     {
-        SetObjectColor(head, colorIndexes[0]);
-        SetObjectColor(torso, colorIndexes[1]);
-        SetObjectColor(legs, colorIndexes[2]);
+		SetObjectColor(head, attributes[0]);
+		SetObjectColor(torso, attributes[1]);
+		SetObjectColor(legs, attributes[2]);
     }
 
     private void SetObjectColor(GameObject gameObject, int i)
