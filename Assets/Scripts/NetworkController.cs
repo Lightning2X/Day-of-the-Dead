@@ -41,7 +41,7 @@ public class NetworkController : NetworkManager {
 	private void OnServerClientsReady() {
 		Debug.Log ("spel gestart");
 		for (int i = 0; i < clients.Count; i++) {
-			clients [i].player.transform.position = clients [i].player.GetComponent<PlayerController> ().initialPosition;
+			clients [i].player.GetComponent<PlayerController> ().resetPosition ();
 		}
 	}
 
@@ -142,11 +142,10 @@ public class NetworkController : NetworkManager {
 			attributeList = this.GetComponent<AttributeList>();
 			for(int i = 0; i < characters.Count; i++)
 			{
-				Debug.Log (i);
 				characterProperties = characters[i].GetComponent<CharacterProperties>();
-				characterProperties.attributes[0] = attributeList.topAttributes[i];
-				characterProperties.attributes[1] = attributeList.middleAttributes[i];
-				characterProperties.attributes[2] = attributeList.bottomAttributes[i];
+			characterProperties.headAttr = attributeList.topAttributes[i];
+			characterProperties.torsoAttr = attributeList.middleAttributes[i];
+			characterProperties.legsAttr = attributeList.bottomAttributes[i];
 				characterProperties.SetColors ();
 			}
 			/*int randomNumber = Random.Range(0, attributeList.topAttributes.Count);
@@ -166,25 +165,6 @@ public class NetworkController : NetworkManager {
 	{
 			if (players.Count > 1)
 			{
-					/*foreach(GameObject player in players)
-					{
-							Debug.Log(targetList.Count);
-							characterProperties = player.GetComponent<CharacterProperties>();
-							int randomNumber = Random.Range(0, targetList.Count);
-							characterProperties.Target = targetList[randomNumber];
-							while (characterProperties.Target == player)
-							{
-									randomNumber = Random.Range(0, targetList.Count);
-									characterProperties.Target = targetList[randomNumber];
-									if(players.Count != 2)
-									{
-											CharacterProperties targetProperties = characterProperties.Target.GetComponent<CharacterProperties>();
-											if (targetProperties.Target == player)
-													characterProperties.Target = player;
-									}
-							}
-							targetList.RemoveAt(randomNumber);
-					}*/
 					for(int i = 0; i < players.Count; i++)
 					{
 

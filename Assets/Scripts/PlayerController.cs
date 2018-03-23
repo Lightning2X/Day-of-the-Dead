@@ -144,26 +144,64 @@ public class PlayerController : NetworkBehaviour {
 
 		if (Input.GetKeyDown(KeyCode.Alpha1))
 		{
-				weapon = unarmed.GetComponent<WeaponProperties>();
-				unarmed.SetActive(true);
-				pistol.SetActive(false);
-				knife.SetActive(false);
+			CmdSwitchToUnarmed ();
 		}
 		if (Input.GetKeyDown(KeyCode.Alpha2))
 		{
-				weapon = knife.GetComponent<WeaponProperties>();
-
-				knife.SetActive(true);
-				pistol.SetActive(false);
-				unarmed.SetActive(false);
+			CmdSwitchToKnife ();
 		}
 		if (Input.GetKeyDown(KeyCode.Alpha3))
 		{
-				weapon = pistol.GetComponent<WeaponProperties>();
-				knife.SetActive(false);
-				pistol.SetActive(true);
-				unarmed.SetActive(false);
+			CmdSwitchToPistol ();
 		}
+	}
+
+	[Command]
+	void CmdSwitchToUnarmed() {
+		weapon = unarmed.GetComponent<WeaponProperties>();
+		unarmed.SetActive(true);
+		pistol.SetActive(false);
+		knife.SetActive(false);
+		RpcSwitchToUnarmed ();
+	}
+
+	[Command]
+	void CmdSwitchToKnife() {
+		weapon = knife.GetComponent<WeaponProperties>();
+		knife.SetActive(true);
+		pistol.SetActive(false);
+		unarmed.SetActive(false);
+		RpcSwitchToKnife ();
+	}
+
+	[Command]
+	void CmdSwitchToPistol() {
+		weapon = pistol.GetComponent<WeaponProperties>();
+		knife.SetActive(false);
+		pistol.SetActive(true);
+		unarmed.SetActive(false);
+		RpcSwitchToPistol ();
+	}
+
+	[ClientRpc]
+	void RpcSwitchToUnarmed() {
+		unarmed.SetActive(true);
+		pistol.SetActive(false);
+		knife.SetActive(false);
+	}
+
+	[ClientRpc]
+	void RpcSwitchToKnife() {
+		knife.SetActive(true);
+		pistol.SetActive(false);
+		unarmed.SetActive(false);
+	}
+
+	[ClientRpc]
+	void RpcSwitchToPistol() {
+		knife.SetActive(false);
+		pistol.SetActive(true);
+		unarmed.SetActive(false);
 	}
 
 	// Update is called once per frame
@@ -226,5 +264,15 @@ public class PlayerController : NetworkBehaviour {
 	void RpcPregame ()
 	{
 		SceneManager.LoadScene("PreGame", LoadSceneMode.Additive);
+	}
+
+	public void resetPosition () {
+		CmdResetPosition ();
+	}
+
+	[Command]
+	void CmdResetPosition ()
+	{
+		transform.position = initialPosition;
 	}
 }

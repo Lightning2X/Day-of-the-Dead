@@ -10,7 +10,14 @@ public class CharacterProperties : NetworkBehaviour {
     [SerializeField] GameObject torso;
     [SerializeField] GameObject legs;
 
-	public int[] attributes = new int[] {0, 0, 0};
+	[SyncVar]
+	public int headAttr = 0;
+	[SyncVar]
+	public int torsoAttr = 0;
+	[SyncVar]
+	public int legsAttr = 0;
+
+	[SyncVar]
     public GameObject target;
 
     [SyncVar]
@@ -40,11 +47,17 @@ public class CharacterProperties : NetworkBehaviour {
 			NetworkServer.Destroy (gameObject);
 	}
 
-    public void SetColors()
+	public void SetColors()
+	{
+		RpcSetColors (new int[]{headAttr, torsoAttr, legsAttr});
+	}
+
+	[ClientRpc]
+	void RpcSetColors(int[] colorIndexes)
     {
-		SetObjectColor(head, attributes[0]);
-		SetObjectColor(torso, attributes[1]);
-		SetObjectColor(legs, attributes[2]);
+		SetObjectColor(head, colorIndexes[0]);
+		SetObjectColor(torso, colorIndexes[1]);
+		SetObjectColor(legs, colorIndexes[2]);
     }
 
     private void SetObjectColor(GameObject gameObject, int i)

@@ -9136,7 +9136,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPrefab: {fileID: 1317015894605374, guid: 315f6aaaa16acb341984aaf8b5e68eb5,
     type: 2}
-  amount: 1
+  amount: 60
 --- !u!114 &1832347779
 MonoBehaviour:
   m_ObjectHideFlags: 0

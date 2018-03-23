@@ -92,7 +92,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4185597250083118}
   - component: {fileID: 33433662886485242}
-  - component: {fileID: 65829361216503442}
   - component: {fileID: 23646559010997002}
   m_Layer: 0
   m_Name: Cube
@@ -227,7 +226,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4571085691583110}
   - component: {fileID: 33424872260479720}
-  - component: {fileID: 65435746982835462}
   - component: {fileID: 23106675784337026}
   m_Layer: 0
   m_Name: Cube (1)
@@ -1026,18 +1024,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!65 &65435746982835462
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1862066182923552}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &65504490709108782
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -1056,18 +1042,6 @@ BoxCollider:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1949790402449436}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!65 &65829361216503442
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1265262744881376}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1

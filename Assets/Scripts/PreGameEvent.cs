@@ -7,8 +7,7 @@ using UnityEngine.Networking;
 
 public class PreGameEvent : MonoBehaviour {
 
-	public int[] appearance = new int[] {1, 3, 2, 1};
-
+	public int[] appearance;
 	public Text t1;
 	public Text t2;
 	public Text t3;
@@ -16,7 +15,26 @@ public class PreGameEvent : MonoBehaviour {
 
 	public Button button;
 
-	private bool[] ddReady = new bool[] {false, false, false, false};
+	private bool[] ddReady = new bool[] {false, false, false};
+
+	void Start() {
+
+		StartCoroutine(GetAttr());
+
+	}
+
+	IEnumerator GetAttr()
+	{
+		yield return new WaitForSeconds(0.1f);
+		GameObject[] players = GameObject.FindGameObjectsWithTag ("Player");
+		for (int i = 0; i < players.Length; i++) {
+			CharacterProperties cp = players [i].GetComponent<CharacterProperties> ();
+			if (cp.isLocalPlayer) {
+				CharacterProperties tcp = cp.target.GetComponent<CharacterProperties> ();
+				appearance = new int[]{tcp.headAttr, tcp.torsoAttr, tcp.legsAttr};
+			}
+		}
+	}
 
 	public void OnButtonClick () {
 		GameObject[] players = GameObject.FindGameObjectsWithTag ("Player");
@@ -25,7 +43,6 @@ public class PreGameEvent : MonoBehaviour {
 			if (pc.hasAuthority) {
 				pc.Ready ();
 			}
-
 		}
 		SceneManager.UnloadSceneAsync("PreGame");
 	}
@@ -33,13 +50,13 @@ public class PreGameEvent : MonoBehaviour {
 	public void OnD1Changed (Dropdown dropdown) {
 		if (dropdown.value != 0) {
 			t1.text = dropdown.captionText.text;
-			if (appearance [0] == dropdown.value)
+			if (appearance [0] == dropdown.value - 1)
 				t1.color = Color.green;
 			else
 				t1.color = Color.red;
 			dropdown.interactable = false;
 			ddReady [0] = true;
-			if (ddReady [0] && ddReady [1] && ddReady [2] && ddReady [3])
+			if (ddReady [0] && ddReady [1] && ddReady [2])
 				button.interactable = true;
 		}
 	}
@@ -47,13 +64,13 @@ public class PreGameEvent : MonoBehaviour {
 	public void OnD2Changed (Dropdown dropdown) {
 		if (dropdown.value != 0) {
 			t2.text = dropdown.captionText.text;
-			if (appearance [1] == dropdown.value)
+			if (appearance [1] == dropdown.value - 1)
 				t2.color = Color.green;
 			else
 				t2.color = Color.red;
 			dropdown.interactable = false;
 			ddReady [1] = true;
-			if (ddReady [0] && ddReady [1] && ddReady [2] && ddReady [3])
+			if (ddReady [0] && ddReady [1] && ddReady [2])
 				button.interactable = true;
 		}
 	}
@@ -61,27 +78,13 @@ public class PreGameEvent : MonoBehaviour {
 	public void OnD3Changed (Dropdown dropdown) {
 		if (dropdown.value != 0) {
 			t3.text = dropdown.captionText.text;
-			if (appearance [2] == dropdown.value)
+			if (appearance [2] == dropdown.value - 1)
 				t3.color = Color.green;
 			else
 				t3.color = Color.red;
 			dropdown.interactable = false;
 			ddReady [2] = true;
-			if (ddReady [0] && ddReady [1] && ddReady [2] && ddReady [3])
-				button.interactable = true;
-		}
-	}
-
-	public void OnD4Changed (Dropdown dropdown) {
-		if (dropdown.value != 0) {
-			t4.text = dropdown.captionText.text;
-			if (appearance [3] == dropdown.value)
-				t4.color = Color.green;
-			else
-				t4.color = Color.red;
-			dropdown.interactable = false;
-			ddReady [3] = true;
-			if (ddReady [0] && ddReady [1] && ddReady [2] && ddReady [3])
+			if (ddReady [0] && ddReady [1] && ddReady [2])
 				button.interactable = true;
 		}
 	}
