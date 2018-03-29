@@ -5,11 +5,15 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.AI;
 
+
 public class NewBehaviourScript : NetworkBehaviour
 {
     public GameObject[] Waypoints;
 
     public int currentIndex = 0;
+
+	private bool isWaiting = false;
+	private float waitTimer;
 
     /*[SerializeField]
     Transform _destination;
@@ -51,36 +55,35 @@ public class NewBehaviourScript : NetworkBehaviour
 
     void Update()
     {
-        if( Vector3.Distance(this.transform.position, Waypoints[currentIndex].transform.position) < 1f)
+		waitTimer -= Time.deltaTime;
+        if(!isWaiting && Vector3.Distance(this.transform.position, Waypoints[currentIndex].transform.position) < 1f)
         {
-            SetDestination();
+			isWaiting = true;
+			_navMeshAgent.enabled = false;
+			if (UnityEngine.Random.value < 0.5f)
+				waitTimer = (UnityEngine.Random.value * 3.0f);
         }
+		if (isWaiting && waitTimer <= 0) {
+			isWaiting = false;
+			_navMeshAgent.enabled = true;
+			SetDestination ();
+		}
     }
 
-    private void SetDestination()
-    {
+	public void SetDestination(int i)
+	{
 
-        currentIndex = UnityEngine.Random.Range(0, Waypoints.Length);
+		currentIndex = i;
+		GoToDestination();
+	}
 
-        /*if (randomNumber <= 0.25)
-            {
-                currentDestination = _destination;
-            }
-            else if(randomNumber > 0.25 && randomNumber <= 0.5)
-            {
-                currentDestination = _destination2;
-            }
-            else if (randomNumber > 0.5 && randomNumber <= 0.75)
-            {
-                currentDestination = _destination3;
-            }
-            else
-            {
-                currentDestination = _destination4;
-            }*/
+	private void SetDestination()
+	{
 
-        GoToDestination();
-    }
+		currentIndex = UnityEngine.Random.Range(0, Waypoints.Length);
+
+		GoToDestination();
+	}
 
     private void GoToDestination()
     {

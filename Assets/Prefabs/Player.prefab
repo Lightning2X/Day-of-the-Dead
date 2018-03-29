@@ -1072,8 +1072,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gravity: -100
-  moveSpeed: 10
-  sprintSpeed: 18
+  moveSpeed: 8
+  sprintSpeed: 14
   jumpSpeed: 20
   virtualCamera: {fileID: 1570149513883984}
   weapon: {fileID: 114780075934099966}
@@ -1133,7 +1133,9 @@ MonoBehaviour:
   head: {fileID: 1523126923617194}
   torso: {fileID: 1862066182923552}
   legs: {fileID: 1265262744881376}
-  attributes: 000000000000000000000000
+  headAttr: 0
+  torsoAttr: 0
+  legsAttr: 0
   target: {fileID: 0}
   _health: 1
 --- !u!114 &114780075934099966
@@ -1148,7 +1150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMelee: 0
-  ammo: 60
+  ammo: 1
   damage: 1
   range: 50
   spread: 6
@@ -1224,7 +1226,7 @@ CharacterController:
   serializedVersion: 2
   m_Height: 2
   m_Radius: 0.5
-  m_SlopeLimit: 45
+  m_SlopeLimit: 33
   m_StepOffset: 0.4
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001

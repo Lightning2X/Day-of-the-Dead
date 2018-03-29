@@ -110,8 +110,11 @@ public class PlayerController : NetworkBehaviour {
 
 					// Apply damage to other character
 					prop.DealDamage (weapon.damage);
-					if (!prop.isAlive)
+					if (!prop.isAlive) {
+						weapon.ammo = 1;
+						if (prop.target)
 							properties.target = prop.target;
+					}
 				}
 			}
 		}
