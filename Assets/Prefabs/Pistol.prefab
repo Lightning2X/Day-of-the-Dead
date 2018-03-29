@@ -477,7 +477,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMelee: 0
-  ammo: 2
+  ammo: 3
   damage: 1
   range: 50
   spread: 6

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 
 public class PlayerController : NetworkBehaviour {
@@ -10,11 +11,17 @@ public class PlayerController : NetworkBehaviour {
 	[SerializeField] float sprintSpeed = 18f;
 	[SerializeField] float jumpSpeed = 20f;
 	[SerializeField] GameObject virtualCamera;
-    [SerializeField] WeaponProperties weapon;
+	[SerializeField] WeaponProperties weapon;
 
-    [SerializeField] GameObject unarmed;
-    [SerializeField] GameObject knife;
-    [SerializeField] GameObject pistol;
+	[SerializeField] GameObject unarmed;
+	[SerializeField] GameObject knife;
+	[SerializeField] GameObject pistol;
+
+    [SerializeField] GameObject partSystem;
+    int particleSystemTimer;
+
+	public NetworkConnection localConn;
+	public Vector3 initialPosition;
 
 	private CharacterController controller;
 	private CharacterProperties properties;
@@ -29,12 +36,13 @@ public class PlayerController : NetworkBehaviour {
 
 	// Initialization
 	void Start () {
-        weapon = unarmed.GetComponent<WeaponProperties>();
-        knife.SetActive(false);
-        pistol.SetActive(false);
+		weapon = unarmed.GetComponent<WeaponProperties>();
+		knife.SetActive(false);
+		pistol.SetActive(false);
+        partSystem.SetActive(false);
 		controller = GetComponent<CharacterController>();
 		properties = GetComponent<CharacterProperties>();
-		
+
 		mainCam = Camera.main;
 
 		//Cursor.lockState = CursorLockMode.Locked;
@@ -60,19 +68,18 @@ public class PlayerController : NetworkBehaviour {
 				Vector3 delta = coll.transform.position - transform.position;
 				float angle = Vector3.Angle(direction, delta);
 
-                // is the attack aimed close enough to the character?
-                if (angle <= weapon.spread * 0.5f)
-                {
-                    // Get other character's properties
-                    CharacterProperties prop = coll.GetComponent<CharacterProperties>();
+				// is the attack aimed close enough to the character?
+				if (angle <= weapon.spread * 0.5f) {
+					// Get other character's properties
+					CharacterProperties prop = coll.GetComponent<CharacterProperties> ();
 
-                    // Apply damage to other character
-                    prop.DealDamage(weapon.damage);
-                    if (!prop.isAlive)
-                    {
-                        properties.Target = prop.Target;
-                    }
-                }
+					// Apply damage to other character
+					prop.DealDamage (weapon.damage);
+                    if (properties.target != coll.gameObject)
+                        CmdActivateParticleSystem();
+                    else
+                        properties.target = prop.target;
+				}
 			}
 		}
 	}
@@ -110,10 +117,10 @@ public class PlayerController : NetworkBehaviour {
 
 					// Apply damage to other character
 					prop.DealDamage (weapon.damage);
-                    if (!prop.isAlive)
-                    {
-                        properties.Target = prop.Target;
-                    }
+                    if (properties.target != hit.collider.gameObject)
+                        CmdActivateParticleSystem();
+                    else
+                        properties.target = prop.target;
                 }
 			}
 		}
@@ -143,37 +150,116 @@ public class PlayerController : NetworkBehaviour {
 			velocity.y = jumpSpeed;
 		if (Input.GetKeyDown (KeyCode.Mouse0))
 			Attack ();
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            weapon = unarmed.GetComponent<WeaponProperties>();
-            unarmed.SetActive(true);
-            pistol.SetActive(false);
-            knife.SetActive(false);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            weapon = knife.GetComponent<WeaponProperties>();
-            
-            knife.SetActive(true);
-            pistol.SetActive(false);
-            unarmed.SetActive(false);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            weapon = pistol.GetComponent<WeaponProperties>();
-            knife.SetActive(false);
-            pistol.SetActive(true);
-            unarmed.SetActive(false);
-        }
+
+		if (Input.GetKeyDown(KeyCode.Alpha1))
+		{
+			CmdSwitchToUnarmed ();
+		}
+		if (Input.GetKeyDown(KeyCode.Alpha2))
+		{
+			CmdSwitchToKnife ();
+		}
+		if (Input.GetKeyDown(KeyCode.Alpha3))
+		{
+			CmdSwitchToPistol ();
+		}
+	}
+
+	[Command]
+	void CmdSwitchToUnarmed() {
+		weapon = unarmed.GetComponent<WeaponProperties>();
+		unarmed.SetActive(true);
+		pistol.SetActive(false);
+		knife.SetActive(false);
+		RpcSwitchToUnarmed ();
+	}
+
+	[Command]
+	void CmdSwitchToKnife() {
+		weapon = knife.GetComponent<WeaponProperties>();
+		knife.SetActive(true);
+		pistol.SetActive(false);
+		unarmed.SetActive(false);
+		RpcSwitchToKnife ();
+	}
+
+	[Command]
+	void CmdSwitchToPistol() {
+		weapon = pistol.GetComponent<WeaponProperties>();
+		knife.SetActive(false);
+		pistol.SetActive(true);
+		unarmed.SetActive(false);
+		RpcSwitchToPistol ();
+	}
+
+    [Command]
+    void CmdActivateParticleSystem()
+    {
+        partSystem.SetActive(true);
+        ParticleSystem ps = partSystem.GetComponent<ParticleSystem>();
+        ps.Play();
+        RpcActivateParticleSystem();
     }
+
+    [Command]
+    void CmdDeactivateParticleSystem()
+    {
+        partSystem.SetActive(false);
+        RpcDeactivateParticleSystem();
+    }
+
+    [ClientRpc]
+    void RpcActivateParticleSystem()
+    {
+        particleSystemTimer = 600;
+        partSystem.SetActive(true);
+        ParticleSystem ps = partSystem.GetComponent<ParticleSystem>();
+        ps.Play();
+    }
+
+    [ClientRpc]
+    void RpcDeactivateParticleSystem()
+    {
+        partSystem.SetActive(false);
+    }
+
+    [ClientRpc]
+	void RpcSwitchToUnarmed() {
+		unarmed.SetActive(true);
+		pistol.SetActive(false);
+		knife.SetActive(false);
+	}
+
+	[ClientRpc]
+	void RpcSwitchToKnife() {
+		knife.SetActive(true);
+		pistol.SetActive(false);
+		unarmed.SetActive(false);
+	}
+
+	[ClientRpc]
+	void RpcSwitchToPistol() {
+		knife.SetActive(false);
+		pistol.SetActive(true);
+		unarmed.SetActive(false);
+	}
 
 	// Update is called once per frame
 	void Update () {
 		if (!isLocalPlayer)
 			return;
-		
-		// Reset horizontal velocity
-		velocity = new Vector3(0, controller.velocity.y, 0);
+
+        // Turn off particle system after timer has ended
+        if (partSystem.active)
+        {
+            Debug.Log(particleSystemTimer);
+            particleSystemTimer -= 1;
+            if (particleSystemTimer <= 0)
+                CmdDeactivateParticleSystem();
+        }
+
+        // Reset horizontal velocity
+        velocity = new Vector3(0, controller.velocity.y, 0);
 
 		// Create forces
 		Vector3 force = new Vector3(0, gravity, 0);
@@ -192,10 +278,10 @@ public class PlayerController : NetworkBehaviour {
 			velocity.x = direction.x * speed;
 			velocity.z = direction.z * speed;
 		}
-			
+
 		// Integrate forces to velocity
 		velocity += force * Time.deltaTime;
-		
+
 		// Move player
 		controller.Move (velocity * Time.deltaTime);
 
@@ -207,5 +293,35 @@ public class PlayerController : NetworkBehaviour {
 	void OnApplicationFocus(bool focus)
 	{
 		hasFocus = focus;
+	}
+
+	public void Ready () {
+		CmdClientReady ();
+	}
+
+	[Command]
+	void CmdClientReady() {
+		NetworkController networkController = GameObject.Find ("Network Manager").GetComponent<NetworkController>();
+		networkController.OnServerClientReady (connectionToClient);
+	}
+
+	public void LoadPregame () {
+		RpcPregame ();
+	}
+
+	[ClientRpc]
+	void RpcPregame ()
+	{
+		SceneManager.LoadScene("PreGame", LoadSceneMode.Additive);
+	}
+
+	public void resetPosition () {
+		CmdResetPosition ();
+	}
+
+	[Command]
+	void CmdResetPosition ()
+	{
+		transform.position = initialPosition;
 	}
 }

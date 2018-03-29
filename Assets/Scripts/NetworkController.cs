@@ -3,17 +3,49 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+public class Client {
+	public NetworkConnection connection;
+	public GameObject player;
+	public bool ready = false;
+
+	public Client (NetworkConnection conn, GameObject plyr) {
+		connection = conn;
+		player = plyr;
+	}
+}
+
 public class NetworkController : NetworkManager {
-
+	public List<GameObject> characters = new List<GameObject>();
 	public List<GameObject> players = new List<GameObject>();
-    //public List<GameObject> targetList = new List<GameObject>();
-    public List<GameObject> characters = new List<GameObject>();
-    GameObject[] characterArray;
-    CharacterProperties characterProperties;
-    AttributeList attributeList;
+	GameObject[] characterArray;
+	CharacterProperties characterProperties;
+	AttributeList attributeList;
 
+	public List<Client> clients = new List<Client>();
 
-    public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
+	[SerializeField] int minPlayerCount = 2;
+
+	public void OnServerClientReady(NetworkConnection conn) {
+		bool allReady = true;
+		for (int i = 0; i < clients.Count; i++) {
+			if (clients [i].connection.connectionId == conn.connectionId){
+				clients [i].ready = true;
+			}
+			if (!clients [i].ready)
+				allReady = false;
+		}
+		if (allReady)
+			OnServerClientsReady ();
+	}
+
+	private void OnServerClientsReady() {
+		Debug.Log ("spel gestart");
+		for (int i = 0; i < clients.Count; i++) {
+			clients [i].player.GetComponent<PlayerController> ().resetPosition ();
+		}
+	}
+
+	public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
 	{
 		if (playerPrefab == null)
 		{
@@ -43,130 +75,120 @@ public class NetworkController : NetworkManager {
 		{
 			player = (GameObject)Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
 		}
-			
+
+		player.GetComponent<PlayerController>().localConn = conn;
+		player.GetComponent<PlayerController>().initialPosition = player.transform.position;
+
+		Client client = new Client (conn, player);
+
+		clients.Add (client);
 		players.Add (player);
-        if (characters.Count < 1)
-        {
-            characterArray = GameObject.FindGameObjectsWithTag("NPC");
-            foreach (GameObject character in characterArray)
-            {
-                characters.Add(character);
-            }
-            Debug.Log(characterArray.Length);
-        }
-        characters.Add(player);
-        /*targetList.Clear();
-        foreach (GameObject p in players)
-        {
-            targetList.Add(p);
-        }*/
-        shuffleObjectList(characters);
-        giveAttributes();
-        shuffleObjectList(players);
-        giveTarget();
-		//Debug.Log (players.Count);
 
 		NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);
+
+		if (clients.Count >= minPlayerCount) {
+			Debug.Log ("Start pregame");
+
+			characterArray = GameObject.FindGameObjectsWithTag("NPC");
+			foreach (GameObject character in characterArray)
+			{
+				characters.Add(character);
+			}
+			foreach (GameObject plyr in players)
+			{
+				characters.Add(plyr);
+			}
+
+			shuffleObjectList(characters);
+			Debug.Log (characters.Count);
+			giveAttributes();
+			shuffleObjectList(players);
+			giveTarget();
+
+			player.GetComponent<PlayerController> ().LoadPregame ();
+		}
 	}
 
 	public override void OnServerDisconnect(NetworkConnection conn)
 	{
-		for (int i = 0; i < conn.playerControllers.Count; i++) {
-			players.Remove (conn.playerControllers[i].gameObject);
-            /*if (players.Count > 1)
-            {
-                characterProperties = conn.playerControllers[i].gameObject.GetComponent<CharacterProperties>();
-                foreach (GameObject p in players)
-                {
-                    CharacterProperties c = p.GetComponent<CharacterProperties>();
-                    if (c.Target == conn.playerControllers[i].gameObject)
-                        c.Target = characterProperties.Target;
-                }
-            }*/
+		for (int i = 0; i < clients.Count; i++) {
+			if (clients [i].connection.connectionId == conn.connectionId)
+				clients.RemoveAt (i);
 		}
-		Debug.Log (players.Count);
+		for (int i = 0; i < conn.playerControllers.Count; i++) {
+			players.Remove (conn.playerControllers [i].gameObject);
+		}
+
 		NetworkServer.DestroyPlayersForConnection(conn);
 	}
 
 	public override void OnStopServer() {
-		players = new List<GameObject>();
+		clients = new List<Client>();
 	}
 
-    private void giveAttributes()
-    {
-        attributeList = this.GetComponent<AttributeList>();
-        for(int i = 0; i < characters.Count; i++)
-        {
-            characterProperties = characters[i].GetComponent<CharacterProperties>();
-            characterProperties.topAttribute = attributeList.topAttributes[i];
-            characterProperties.middleAttribute = attributeList.middleAttributes[i];
-            characterProperties.bottomAttribute = attributeList.bottomAttributes[i];
-        }
-        /*int randomNumber = Random.Range(0, attributeList.topAttributes.Count);
-        //Debug.Log(attributeList.topAttributes[0]);
-        characterProperties.topAttribute = attributeList.topAttributes[randomNumber];
-        //Debug.Log(characterProperties.topAttribute);
-        attributeList.topAttributes.RemoveAt(randomNumber);
-        randomNumber = Random.Range(0, attributeList.middleAttributes.Count);
-        characterProperties.middleAttribute = attributeList.middleAttributes[randomNumber];
-        attributeList.middleAttributes.RemoveAt(randomNumber);
-        randomNumber = Random.Range(0, attributeList.bottomAttributes.Count);
-        characterProperties.bottomAttribute = attributeList.bottomAttributes[randomNumber];
-        attributeList.bottomAttributes.RemoveAt(randomNumber);*/
-    }
+	public override void OnClientConnect(NetworkConnection conn)
+	{
+		base.OnClientConnect (conn);
 
-    private void giveTarget()
-    {
-        if (players.Count > 1)
-        {
-            /*foreach(GameObject player in players)
-            {
-                Debug.Log(targetList.Count);
-                characterProperties = player.GetComponent<CharacterProperties>();
-                int randomNumber = Random.Range(0, targetList.Count);
-                characterProperties.Target = targetList[randomNumber];
-                while (characterProperties.Target == player)
-                {
-                    randomNumber = Random.Range(0, targetList.Count);
-                    characterProperties.Target = targetList[randomNumber];
-                    if(players.Count != 2)
-                    {
-                        CharacterProperties targetProperties = characterProperties.Target.GetComponent<CharacterProperties>();
-                        if (targetProperties.Target == player)
-                            characterProperties.Target = player;
-                    }
-                }
-                targetList.RemoveAt(randomNumber);
-            }*/
-            for(int i = 0; i < players.Count; i++)
-            {
+	}
 
-                characterProperties = players[i].GetComponent<CharacterProperties>();
-                if(i != players.Count - 1)
-                {
-                    characterProperties.Target = players[i + 1];
-                }
-                else
-                {
-                    characterProperties.Target = players[0];
-                }
-                if (i == 0)
-                {
-                    CharacterProperties cprop = players[i + 1].GetComponent<CharacterProperties>();
-                    Debug.Log(cprop.topAttribute);
-                }
-            }
-        }
-    }
+	public override void OnClientDisconnect(NetworkConnection conn)
+	{
+		base.OnClientDisconnect (conn);
+	}
 
-    public void shuffleObjectList(List<GameObject> list)
-    {
-        for (int i = 0; i < list.Count; i++)
-        {
-            GameObject temp = list[i];
-            int randomIndex = Random.Range(i, list.Count);
-            list[i] = list[randomIndex];
-            list[randomIndex] = temp;
-        }
-    }
+	private void giveAttributes()
+	{
+			attributeList = this.GetComponent<AttributeList>();
+			for(int i = 0; i < characters.Count; i++)
+			{
+				characterProperties = characters[i].GetComponent<CharacterProperties>();
+			characterProperties.headAttr = attributeList.topAttributes[i];
+			characterProperties.torsoAttr = attributeList.middleAttributes[i];
+			characterProperties.legsAttr = attributeList.bottomAttributes[i];
+				characterProperties.SetColors ();
+			}
+			/*int randomNumber = Random.Range(0, attributeList.topAttributes.Count);
+			//Debug.Log(attributeList.topAttributes[0]);
+			characterProperties.topAttribute = attributeList.topAttributes[randomNumber];
+			//Debug.Log(characterProperties.topAttribute);
+			attributeList.topAttributes.RemoveAt(randomNumber);
+			randomNumber = Random.Range(0, attributeList.middleAttributes.Count);
+			characterProperties.middleAttribute = attributeList.middleAttributes[randomNumber];
+			attributeList.middleAttributes.RemoveAt(randomNumber);
+			randomNumber = Random.Range(0, attributeList.bottomAttributes.Count);
+			characterProperties.bottomAttribute = attributeList.bottomAttributes[randomNumber];
+			attributeList.bottomAttributes.RemoveAt(randomNumber);*/
+	}
+
+	private void giveTarget()
+	{
+			if (players.Count > 1)
+			{
+					for(int i = 0; i < players.Count; i++)
+					{
+
+							characterProperties = players[i].GetComponent<CharacterProperties>();
+							if(i != players.Count - 1)
+							{
+									characterProperties.target = players[i + 1];
+							}
+							else
+							{
+									characterProperties.target = players[0];
+							}
+					}
+			}
+	}
+
+	public void shuffleObjectList(List<GameObject> list)
+	{
+			for (int i = 0; i < list.Count; i++)
+			{
+					GameObject temp = list[i];
+					int randomIndex = Random.Range(i, list.Count);
+					list[i] = list[randomIndex];
+					list[randomIndex] = temp;
+			}
+	}
 }

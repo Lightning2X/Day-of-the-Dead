@@ -5,17 +5,25 @@ using UnityEngine.Networking;
 
 public class CharacterProperties : NetworkBehaviour {
 	public bool isAlive = true;
-    public string topAttribute;
-    public string middleAttribute;
-    public string bottomAttribute;
-    public GameObject Target;
-    AttributeList attributeList;
-    NetworkController networkController;
+
+    [SerializeField] GameObject head;
+    [SerializeField] GameObject torso;
+    [SerializeField] GameObject legs;
+
+	[SyncVar]
+	public int headAttr = 0;
+	[SyncVar]
+	public int torsoAttr = 0;
+	[SyncVar]
+	public int legsAttr = 0;
+
+	[SyncVar]
+    public GameObject target;
+
     [SyncVar]
 	public int _health = 1;
 
-
-	public int health {
+    public int health {
 		get {
 			return _health;
 		}
@@ -26,12 +34,6 @@ public class CharacterProperties : NetworkBehaviour {
 			else
 				isAlive = true;
 		}
-	}
-
-	[ClientRpc]
-	void RpcDamage (int amount)
-	{
-		Debug.Log ("Your health is now: " + _health);
 	}
 
 	public void DealDamage (int amount)
@@ -45,50 +47,30 @@ public class CharacterProperties : NetworkBehaviour {
 			NetworkServer.Destroy (gameObject);
 	}
 
-    void Start()
+	public void SetColors()
+	{
+		RpcSetColors (new int[]{headAttr, torsoAttr, legsAttr});
+	}
+
+	[ClientRpc]
+	void RpcSetColors(int[] colorIndexes)
     {
-       /* GameObject attributeController = GameObject.Find("AttributeController");
-        attributeList = attributeController.GetComponent<AttributeList>();
-        GameObject playerListController = GameObject.Find("Network Manager");
-        networkController = playerListController.GetComponent<NetworkController>();
-        getAttributes();
-        getTarget();*/
-    }
-    private void getAttributes()
-    {
-        /*if (!isLocalPlayer)
-        {
-            return;
-        }*/
-        int randomNumber = Random.Range(0, attributeList.topAttributes.Count);
-        Debug.Log(attributeList.topAttributes[0]);
-        topAttribute = attributeList.topAttributes[randomNumber];
-        Debug.Log(topAttribute);
-        attributeList.topAttributes.RemoveAt(randomNumber);
-        randomNumber = Random.Range(0, attributeList.middleAttributes.Count);
-        middleAttribute = attributeList.middleAttributes[randomNumber];
-        attributeList.middleAttributes.RemoveAt(randomNumber);
-        randomNumber = Random.Range(0, attributeList.bottomAttributes.Count);
-        bottomAttribute = attributeList.bottomAttributes[randomNumber];
-        attributeList.bottomAttributes.RemoveAt(randomNumber);
+		SetObjectColor(head, colorIndexes[0]);
+		SetObjectColor(torso, colorIndexes[1]);
+		SetObjectColor(legs, colorIndexes[2]);
     }
 
-    private void getTarget()
+    private void SetObjectColor(GameObject gameObject, int i)
     {
-        /*if (!isLocalPlayer)
-        {
-            return;
-        }*/
-        int randomNumber = Random.Range(0, networkController.players.Count);
-        Debug.Log("list length according to properties: " + networkController.players.Count);
-        Target = networkController.players[randomNumber];
-        if (Target == gameObject)
-        {
-            getTarget();
-        }
-        else
-        {
-            networkController.players.RemoveAt(randomNumber);
-        }
+        Material material = gameObject.GetComponent<Renderer>().material;
+        if (i == 0)
+            material.color = new Color(0.690F, 0.125F, 0.082F); //Rood
+        else if (i == 1)
+            material.color = new Color(0.749F, 0.420F, 0F); //Oranje
+        else if (i == 2)
+            material.color = new Color(0.071F, 0.534F, 0.722F); //Blauw
+        else if (i == 3)
+            material.color = new Color(0.392F, 0.690F, 0.278F); //Groen
     }
+
 }

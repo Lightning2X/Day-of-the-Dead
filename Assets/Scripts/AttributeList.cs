@@ -5,9 +5,9 @@ using UnityEngine;
 public class AttributeList : MonoBehaviour
 {
 
-    public List<string> topAttributes = new List<string>();
-    public List<string> middleAttributes = new List<string>();
-    public List<string> bottomAttributes = new List<string>();
+    public List<int> topAttributes = new List<int>();
+    public List<int> middleAttributes = new List<int>();
+    public List<int> bottomAttributes = new List<int>();
     public int amountTypesAttributes = 4;
     int topListCounter = 0;
     int middleListCounter = 0;
@@ -28,7 +28,6 @@ public class AttributeList : MonoBehaviour
                 }
             }
         }
-        Debug.Log(topAttributes.Count);
         /*topAttributes.Add("hat");
         topAttributes.Add("hat");
         middleAttributes.Add("blueshirt");
@@ -41,31 +40,31 @@ public class AttributeList : MonoBehaviour
     void addToList()
     {
         if (topListCounter == 0)
-            topAttributes.Add("hat");
+            topAttributes.Add(0);
         else if (topListCounter == 1)
-            topAttributes.Add("longhair");
+            topAttributes.Add(1);
         else if (topListCounter == 2)
-            topAttributes.Add("shorthair");
+            topAttributes.Add(2);
         else if (topListCounter == 3)
-            topAttributes.Add("mask");
+            topAttributes.Add(3);
 
         if (middleListCounter == 0)
-            middleAttributes.Add("blueshirt");
+            middleAttributes.Add(0);
         else if (middleListCounter == 1)
-            middleAttributes.Add("redshirt");
+            middleAttributes.Add(1);
         else if (middleListCounter == 2)
-            middleAttributes.Add("dress");
+            middleAttributes.Add(2);
         else if (middleListCounter == 3)
-            middleAttributes.Add("bra");
+            middleAttributes.Add(3);
 
         if (bottomListCounter == 0)
-            bottomAttributes.Add("shortpants");
+            bottomAttributes.Add(0);
         else if (bottomListCounter == 1)
-            bottomAttributes.Add("shortskirt");
+            bottomAttributes.Add(1);
         else if (bottomListCounter == 2)
-            bottomAttributes.Add("longpants");
+            bottomAttributes.Add(2);
         else if (bottomListCounter == 3)
-            bottomAttributes.Add("longskirt");
+            bottomAttributes.Add(3);
     }
 
     /*void MakingPlayerList()
