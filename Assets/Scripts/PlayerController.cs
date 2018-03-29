@@ -16,7 +16,11 @@ public class PlayerController : NetworkBehaviour {
 	[SerializeField] GameObject unarmed;
 	[SerializeField] GameObject knife;
 	[SerializeField] GameObject pistol;
-	public NetworkConnection localConn;
+
+    [SerializeField] GameObject partSystem;
+    int particleSystemTimer;
+
+    public NetworkConnection localConn;
 	public Vector3 initialPosition;
 
 	private CharacterController controller;
@@ -35,7 +39,8 @@ public class PlayerController : NetworkBehaviour {
 		weapon = unarmed.GetComponent<WeaponProperties>();
 		knife.SetActive(false);
 		pistol.SetActive(false);
-		controller = GetComponent<CharacterController>();
+        partSystem.SetActive(false);
+        controller = GetComponent<CharacterController>();
 		properties = GetComponent<CharacterProperties>();
 
 		mainCam = Camera.main;
@@ -70,9 +75,11 @@ public class PlayerController : NetworkBehaviour {
 
 					// Apply damage to other character
 					prop.DealDamage (weapon.damage);
-					if (!prop.isAlive)
-							properties.target = prop.target;
-				}
+                    if (properties.target != coll.gameObject)
+                        CmdActivateParticleSystem();
+                    else
+                        properties.target = prop.target;
+                }
 			}
 		}
 	}
@@ -110,12 +117,17 @@ public class PlayerController : NetworkBehaviour {
 
 					// Apply damage to other character
 					prop.DealDamage (weapon.damage);
-					if (!prop.isAlive) {
+                    weapon.ammo = 1;
+                    /*if (!prop.isAlive) {
 						weapon.ammo = 1;
 						if (prop.target)
 							properties.target = prop.target;
-					}
-				}
+					}*/
+                    if (properties.target != hit.collider.gameObject)
+                        CmdActivateParticleSystem();
+                    else
+                        properties.target = prop.target;
+                }
 			}
 		}
 	}
@@ -207,13 +219,53 @@ public class PlayerController : NetworkBehaviour {
 		unarmed.SetActive(false);
 	}
 
-	// Update is called once per frame
-	void Update () {
+    [Command]
+    void CmdActivateParticleSystem()
+    {
+        partSystem.SetActive(true);
+        ParticleSystem ps = partSystem.GetComponent<ParticleSystem>();
+        ps.Play();
+        RpcActivateParticleSystem();
+    }
+
+    [Command]
+    void CmdDeactivateParticleSystem()
+    {
+        partSystem.SetActive(false);
+        RpcDeactivateParticleSystem();
+    }
+
+    [ClientRpc]
+    void RpcActivateParticleSystem()
+    {
+        particleSystemTimer = 600;
+        partSystem.SetActive(true);
+        ParticleSystem ps = partSystem.GetComponent<ParticleSystem>();
+        ps.Play();
+    }
+
+    [ClientRpc]
+    void RpcDeactivateParticleSystem()
+    {
+        partSystem.SetActive(false);
+    }
+
+    // Update is called once per frame
+    void Update () {
 		if (!isLocalPlayer)
 			return;
 
-		// Reset horizontal velocity
-		velocity = new Vector3(0, controller.velocity.y, 0);
+        // Turn off particle system after timer has ended
+        if (partSystem.active)
+        {
+            Debug.Log(particleSystemTimer);
+            particleSystemTimer -= 1;
+            if (particleSystemTimer <= 0)
+                CmdDeactivateParticleSystem();
+        }
+
+        // Reset horizontal velocity
+        velocity = new Vector3(0, controller.velocity.y, 0);
 
 		// Create forces
 		Vector3 force = new Vector3(0, gravity, 0);
