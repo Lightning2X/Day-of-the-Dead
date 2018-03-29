@@ -12,7 +12,7 @@ public class NewBehaviourScript : NetworkBehaviour
 
     public int currentIndex = 0;
 
-	private bool isWaiting = false;
+	public bool isWaiting = false;
 	private float waitTimer;
 
     /*[SerializeField]
@@ -30,6 +30,7 @@ public class NewBehaviourScript : NetworkBehaviour
     Transform currentDestination;*/
 
     NavMeshAgent _navMeshAgent;
+	RandomJump randomJump;
 	// Use this for initialization
 	void Start ()
     {
@@ -42,6 +43,7 @@ public class NewBehaviourScript : NetworkBehaviour
         Waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
 
         _navMeshAgent = this.GetComponent<NavMeshAgent>();
+		randomJump = this.GetComponent<RandomJump>();
 
         if(_navMeshAgent == null)
         {
@@ -54,16 +56,14 @@ public class NewBehaviourScript : NetworkBehaviour
 	}
 
     void Update()
-    {
+	{
 		waitTimer -= Time.deltaTime;
-        if(!isWaiting && Vector3.Distance(this.transform.position, Waypoints[currentIndex].transform.position) < 1f)
-        {
+		if (!isWaiting && Vector3.Distance (this.transform.position, Waypoints [currentIndex].transform.position) < 1f) {
 			isWaiting = true;
 			_navMeshAgent.enabled = false;
 			if (UnityEngine.Random.value < 0.5f)
 				waitTimer = (UnityEngine.Random.value * 3.0f);
-        }
-		if (isWaiting && waitTimer <= 0) {
+		} else if (isWaiting && waitTimer <= 0) {
 			isWaiting = false;
 			_navMeshAgent.enabled = true;
 			SetDestination ();

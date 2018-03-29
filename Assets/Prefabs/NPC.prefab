@@ -301,6 +301,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967035
   timerTime: 25
+  isJumping: 0
+  isWaiting: 0
 --- !u!114 &114441244013305418
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -314,6 +316,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Waypoints: []
   currentIndex: 0
+  isWaiting: 0
 --- !u!114 &114463871504489428
 MonoBehaviour:
   m_ObjectHideFlags: 1

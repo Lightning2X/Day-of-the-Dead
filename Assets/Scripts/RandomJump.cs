@@ -25,11 +25,15 @@ public class RandomJump : NetworkBehaviour
     [SerializeField] private float timerTime = 25;
     private const float jumpChance = 0.5f;
 
-    private bool isJumping = false;
-	private bool isWaiting = false;
+    public bool isJumping = false;
+	public bool isWaiting = false;
 
     // Use this for initialization
     void Start () {
+		if (!hasAuthority) {
+			Destroy (this);
+			return;
+		}
         agent = GetComponent<NavMeshAgent> ();
         controller = GetComponent<CharacterController> ();
 		behaviourScript = GetComponent<NewBehaviourScript> ();
@@ -54,19 +58,19 @@ public class RandomJump : NetworkBehaviour
 		waitTimer -= Time.deltaTime;
 
         // Jump when timer hits 0
-        if (actionTimer <= 0 && !isJumping)
-        {
-            float tempRandom = Random.value;
-			if (tempRandom < 0.6f) {
-				if (tempRandom < 0.3f)
-					Jump ();
-				else
-					RandomMovement ();
+		if (agent.enabled) {
+			if (actionTimer <= 0 && !isJumping) {
+				float tempRandom = Random.value;
+				if (tempRandom < 0.6f) {
+					if (tempRandom < 0.3f) {
+						Jump ();
+					} else {
+						RandomMovement ();
+					}
+				} else
+					RandomWait ();
 			}
-            else
-                RandomWait();
-        }
-
+		}
 		if (isWaiting && waitTimer <= 0) {
 			isWaiting = false;
 			ResetToAgent ();
@@ -86,7 +90,6 @@ public class RandomJump : NetworkBehaviour
 		raycastOrigin.y -= controller.height * 0.5f;
 
 		// Stop jumping when we hit the ground
-		if (isJumping) Debug.DrawRay(raycastOrigin, -transform.up * raycastRange, Color.red, 0.1f); // debug
 		if (isJumping && Physics.Raycast (raycastOrigin, -transform.up, out hit, raycastRange, raycastLayerMask)) {
 			isJumping = false;
             ResetToAgent();
@@ -122,9 +125,9 @@ public class RandomJump : NetworkBehaviour
     private void ResetToAgent()
     {
         agent.enabled = true;
-        // Resume pathfinding
+		// Resume pathfinding
+		actionTimer = (Random.value * timerTime);
         behaviourScript.SetDestination(behaviourScript.currentIndex);
-        actionTimer = (Random.value * timerTime);
     }
 }
 
