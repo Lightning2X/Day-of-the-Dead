@@ -258,7 +258,6 @@ public class PlayerController : NetworkBehaviour {
         // Turn off particle system after timer has ended
         if (partSystem.active)
         {
-            Debug.Log(particleSystemTimer);
             particleSystemTimer -= 1;
             if (particleSystemTimer <= 0)
                 CmdDeactivateParticleSystem();
