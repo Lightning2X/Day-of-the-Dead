@@ -34,7 +34,6 @@ public class PreGameEvent : MonoBehaviour {
 				appearance = new int[]{tcp.headAttr, tcp.torsoAttr, tcp.legsAttr};
 			}
 		}
-		Debug.Log (appearance[0] + ", " + appearance[1] + ", " + appearance[2]);
 	}
 
 	public void OnButtonClick () {

@@ -48,16 +48,18 @@ public class PlayerController : NetworkBehaviour {
 		Cursor.lockState = CursorLockMode.Locked;
 		//Cursor.visible = false;
 	}
-
-	void Attack () {
+		
+	[Command]
+	void CmdAttack (GameObject vc) {
 		if (weapon.isMelee)
-			CmdStab (virtualCamera.transform.forward);
+			Stab (vc.transform.forward);
 		else
-			CmdShoot (virtualCamera.transform.position, virtualCamera.transform.forward);
+			Shoot (vc.transform.position, vc.transform.forward);
 	}
 
-	[Command]
-	void CmdStab (Vector3 direction) {
+	private void Stab (Vector3 direction) {
+
+		Debug.Log ("stab");
 		// Check if there are any colliders inside a given sphere
 		Collider[] colls = Physics.OverlapSphere(transform.position, weapon.range);
 
@@ -76,7 +78,6 @@ public class PlayerController : NetworkBehaviour {
 					// Apply damage to other character
 					prop.DealDamage (weapon.damage);
                     weapon.ammo = 1;
-                    Debug.Log(weapon.ammo);
                     if (properties.target != coll.gameObject)
                         CmdActivateParticleSystem();
                     else
@@ -86,12 +87,12 @@ public class PlayerController : NetworkBehaviour {
 		}
 	}
 
-	[Command]
-	void CmdShoot (Vector3 position, Vector3 direction) {
+	private void Shoot (Vector3 position, Vector3 direction) {
 		// Does the weapon have ammo left?
 		if (weapon.ammo <= 0)
 			return;
 
+		Debug.Log ("shoot");
 		// Decrement ammo amount
 		weapon.ammo--;
 
@@ -157,7 +158,7 @@ public class PlayerController : NetworkBehaviour {
 		if (Input.GetKeyDown (KeyCode.Space) && controller.isGrounded)
 			velocity.y = jumpSpeed;
 		if (Input.GetKeyDown (KeyCode.Mouse0))
-			Attack ();
+			CmdAttack (virtualCamera);
 
 		if (Input.GetKeyDown(KeyCode.Alpha1))
 		{
