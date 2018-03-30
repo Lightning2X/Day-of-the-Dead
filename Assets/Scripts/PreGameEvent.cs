@@ -57,8 +57,6 @@ public class PreGameEvent : MonoBehaviour {
 	}
 
 	public void OnD1Changed (Dropdown dropdown) {
-		Debug.Log (note.t1);
-		Debug.Log (dropdown.captionText.text);
 		if (dropdown.value != 0) {
 			t1.text = dropdown.captionText.text;
 			note.t1.text = dropdown.captionText.text;
