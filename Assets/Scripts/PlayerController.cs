@@ -58,8 +58,6 @@ public class PlayerController : NetworkBehaviour {
 	}
 
 	private void Stab (Vector3 direction) {
-
-		Debug.Log ("stab");
 		// Check if there are any colliders inside a given sphere
 		Collider[] colls = Physics.OverlapSphere(transform.position, weapon.range);
 
@@ -77,7 +75,7 @@ public class PlayerController : NetworkBehaviour {
 
 					// Apply damage to other character
 					prop.DealDamage (weapon.damage);
-                    weapon.ammo = 1;
+					pistol.GetComponent<WeaponProperties>().ammo = 1;
                     if (properties.target != coll.gameObject)
                         CmdActivateParticleSystem();
                     else
@@ -92,7 +90,6 @@ public class PlayerController : NetworkBehaviour {
 		if (weapon.ammo <= 0)
 			return;
 
-		Debug.Log ("shoot");
 		// Decrement ammo amount
 		weapon.ammo--;
 

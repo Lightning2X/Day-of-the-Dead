@@ -35,7 +35,7 @@ public class NewBehaviourScript : NetworkBehaviour
 	void Start ()
     {
 		if (!hasAuthority) {
-			//Destroy (GetComponent<NavMeshAgent> ());
+			Destroy (GetComponent<NavMeshAgent> ());
 			Destroy (this);
 			return;
 		}
