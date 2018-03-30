@@ -87,10 +87,12 @@ public class PlayerController : NetworkBehaviour {
 					// Apply damage to other character
 					prop.DealDamage (weapon.damage);
 					pistol.GetComponent<WeaponProperties>().ammo = 1;
-                    if (properties.target != coll.gameObject)
-                        CmdActivateParticleSystem();
-                    else
-                        properties.target = prop.target;
+					if (properties.target != coll.gameObject)
+						CmdActivateParticleSystem ();
+					else {
+						properties.target = prop.target;
+						RpcSetNote ();
+					}
                 }
 			}
 		}
@@ -138,13 +140,7 @@ public class PlayerController : NetworkBehaviour {
 						CmdActivateParticleSystem ();
 					else {
 						properties.target = prop.target;
-						PlayerController tc = prop.target.GetComponent<PlayerController> ();
-						note.t1.text = tc.t1;
-						note.t2.text = tc.t2;
-						note.t3.text = tc.t3;
-						note.t1.color = tc.c1;
-						note.t2.color = tc.c2;
-						note.t3.color = tc.c3;
+						RpcSetNote ();
 					}
                 }
 			}
@@ -268,6 +264,17 @@ public class PlayerController : NetworkBehaviour {
     {
         partSystem.SetActive(false);
     }
+
+	[ClientRpc]
+	void RpcSetNote() {
+		PlayerController tc = properties.target.GetComponent<PlayerController> ();
+		note.t1.text = tc.t1;
+		note.t2.text = tc.t2;
+		note.t3.text = tc.t3;
+		note.t1.color = tc.c1;
+		note.t2.color = tc.c2;
+		note.t3.color = tc.c3;
+	}
 
     // Update is called once per frame
     void Update () {
