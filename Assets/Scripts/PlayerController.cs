@@ -272,7 +272,7 @@ public class PlayerController : NetworkBehaviour {
     }
 
 	[ClientRpc]
-	void RpcSetNote() {
+	public void RpcSetNote() {
 		PlayerController tc = properties.target.GetComponent<PlayerController> ();
 		note.t1.text = tc.t1;
 		note.t2.text = tc.t2;
@@ -282,13 +282,31 @@ public class PlayerController : NetworkBehaviour {
 		note.t3.color = tc.c3;
 	}
 
+	[Command]
+	public void CmdSetNoteHead(string text, Color color) {
+		t1 = text;
+		c1 = color;
+	}
+
+	[Command]
+	public void CmdSetNoteTorso(string text, Color color) {
+		t2 = text;
+		c2 = color;
+	}
+
+	[Command]
+	public void CmdSetNoteLegs(string text, Color color) {
+		t3 = text;
+		c3 = color;
+	}
+
     // Update is called once per frame
     void Update () {
 		if (!isLocalPlayer)
 			return;
 
         // Turn off particle system after timer has ended
-        if (partSystem.active)
+		if (partSystem.activeInHierarchy)
         {
             particleSystemTimer -= 1;
             if (particleSystemTimer <= 0)
