@@ -29,8 +29,15 @@ public class PreGameEvent : MonoBehaviour {
 		Cursor.lockState = CursorLockMode.None;
 		GameObject[] players = GameObject.FindGameObjectsWithTag ("Player");
 		for (int i = 0; i < players.Length; i++) {
+			PlayerController pc = players [i].GetComponent<PlayerController> ();
 			CharacterProperties cp = players [i].GetComponent<CharacterProperties> ();
 			if (cp.isLocalPlayer) {
+				pc.t1 = t1.text;
+				pc.t2 = t2.text;
+				pc.t3 = t3.text;
+				pc.c1 = t1.color;
+				pc.c2 = t2.color;
+				pc.c3 = t3.color;
 				CharacterProperties tcp = cp.target.GetComponent<CharacterProperties> ();
 				appearance = new int[]{tcp.headAttr, tcp.torsoAttr, tcp.legsAttr};
 			}

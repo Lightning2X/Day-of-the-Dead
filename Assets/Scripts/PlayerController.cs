@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class PlayerController : NetworkBehaviour {
 
@@ -32,8 +33,14 @@ public class PlayerController : NetworkBehaviour {
 	private Vector3 direction;
 	private float speed;
 
-	[SyncVar]
-	public GameObject note;
+	public string t1;
+	public string t2;
+	public string t3;
+	public Color c1;
+	public Color c2;
+	public Color c3;
+
+	public Textfields note;
 	private bool hasFocus = true;
 
 	// Initialization
@@ -44,7 +51,7 @@ public class PlayerController : NetworkBehaviour {
         partSystem.SetActive(false);
         controller = GetComponent<CharacterController>();
 		properties = GetComponent<CharacterProperties>();
-		note = GameObject.FindWithTag("Note");
+		note = GameObject.FindWithTag ("Note").GetComponent<Textfields> ();
 
 		mainCam = Camera.main;
 
@@ -130,9 +137,13 @@ public class PlayerController : NetworkBehaviour {
 						CmdActivateParticleSystem ();
 					else {
 						properties.target = prop.target;
-						GameObject tn = properties.target.GetComponent<PlayerController>().note;
-						Textfields tf = tn.GetComponent<Textfields> ();
-						Debug.Log(tf.t1.text);
+						PlayerController tc = prop.target.GetComponent<PlayerController> ();
+						note.t1.text = tc.t1;
+						note.t2.text = tc.t2;
+						note.t3.text = tc.t3;
+						note.t1.color = tc.c1;
+						note.t2.color = tc.c2;
+						note.t3.color = tc.c3;
 					}
                 }
 			}
