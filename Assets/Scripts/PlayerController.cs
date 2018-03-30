@@ -33,6 +33,7 @@ public class PlayerController : NetworkBehaviour {
 	private Vector3 direction;
 	private float speed;
 
+	public Textfields note;
 	public string t1;
 	public string t2;
 	public string t3;
@@ -40,7 +41,6 @@ public class PlayerController : NetworkBehaviour {
 	public Color c2;
 	public Color c3;
 
-	public Textfields note;
 	private bool hasFocus = true;
 
 	// Initialization
@@ -51,7 +51,8 @@ public class PlayerController : NetworkBehaviour {
         partSystem.SetActive(false);
         controller = GetComponent<CharacterController>();
 		properties = GetComponent<CharacterProperties>();
-		note = GameObject.FindWithTag ("Note").GetComponent<Textfields> ();
+		GameObject panel = GameObject.FindWithTag ("Note");
+		note = panel.GetComponent<Textfields> ();
 
 		mainCam = Camera.main;
 
