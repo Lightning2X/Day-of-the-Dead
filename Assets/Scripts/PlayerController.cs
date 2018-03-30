@@ -45,7 +45,7 @@ public class PlayerController : NetworkBehaviour {
 
 		mainCam = Camera.main;
 
-		//Cursor.lockState = CursorLockMode.Locked;
+		Cursor.lockState = CursorLockMode.Locked;
 		//Cursor.visible = false;
 	}
 
@@ -75,6 +75,8 @@ public class PlayerController : NetworkBehaviour {
 
 					// Apply damage to other character
 					prop.DealDamage (weapon.damage);
+                    weapon.ammo = 1;
+                    Debug.Log(weapon.ammo);
                     if (properties.target != coll.gameObject)
                         CmdActivateParticleSystem();
                     else
