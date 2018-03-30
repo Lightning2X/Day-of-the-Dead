@@ -34,11 +34,17 @@ public class PlayerController : NetworkBehaviour {
 	private float speed;
 
 	public Textfields note;
+	[SyncVar]
 	public string t1;
+	[SyncVar]
 	public string t2;
+	[SyncVar]
 	public string t3;
+	[SyncVar]
 	public Color c1;
+	[SyncVar]
 	public Color c2;
+	[SyncVar]
 	public Color c3;
 
 	private bool hasFocus = true;
