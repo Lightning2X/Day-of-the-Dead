@@ -20,12 +20,12 @@ public class PreGameEvent : MonoBehaviour {
 	void Start() {
 
 		StartCoroutine(GetAttr());
-
 	}
 
 	IEnumerator GetAttr()
 	{
-		yield return new WaitForSeconds(0.1f);
+		yield return new WaitForSeconds(0.3f);
+		Cursor.lockState = CursorLockMode.None;
 		GameObject[] players = GameObject.FindGameObjectsWithTag ("Player");
 		for (int i = 0; i < players.Length; i++) {
 			CharacterProperties cp = players [i].GetComponent<CharacterProperties> ();
@@ -34,6 +34,7 @@ public class PreGameEvent : MonoBehaviour {
 				appearance = new int[]{tcp.headAttr, tcp.torsoAttr, tcp.legsAttr};
 			}
 		}
+		Debug.Log (appearance[0] + ", " + appearance[1] + ", " + appearance[2]);
 	}
 
 	public void OnButtonClick () {
@@ -44,6 +45,7 @@ public class PreGameEvent : MonoBehaviour {
 				pc.Ready ();
 			}
 		}
+		Cursor.lockState = CursorLockMode.Locked;
 		SceneManager.UnloadSceneAsync("PreGame");
 	}
 
