@@ -50,11 +50,11 @@ public class PlayerController : NetworkBehaviour {
 	}
 		
 	[Command]
-	void CmdAttack (GameObject vc) {
+	void CmdAttack (Vector3 position, Vector3 direction) {
 		if (weapon.isMelee)
-			Stab (vc.transform.forward);
+			Stab (direction);
 		else
-			Shoot (vc.transform.position, vc.transform.forward);
+			Shoot (position, direction);
 	}
 
 	private void Stab (Vector3 direction) {
@@ -158,7 +158,7 @@ public class PlayerController : NetworkBehaviour {
 		if (Input.GetKeyDown (KeyCode.Space) && controller.isGrounded)
 			velocity.y = jumpSpeed;
 		if (Input.GetKeyDown (KeyCode.Mouse0))
-			CmdAttack (virtualCamera);
+			CmdAttack (virtualCamera.transform.position, virtualCamera.transform.forward);
 
 		if (Input.GetKeyDown(KeyCode.Alpha1))
 		{
