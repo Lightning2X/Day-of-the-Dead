@@ -32,6 +32,8 @@ public class PlayerController : NetworkBehaviour {
 	private Vector3 direction;
 	private float speed;
 
+	[SyncVar]
+	public GameObject note;
 	private bool hasFocus = true;
 
 	// Initialization
@@ -42,10 +44,11 @@ public class PlayerController : NetworkBehaviour {
         partSystem.SetActive(false);
         controller = GetComponent<CharacterController>();
 		properties = GetComponent<CharacterProperties>();
+		note = GameObject.FindWithTag("Note");
 
 		mainCam = Camera.main;
 
-		Cursor.lockState = CursorLockMode.Locked;
+		//Cursor.lockState = CursorLockMode.Locked;
 		//Cursor.visible = false;
 	}
 		
@@ -123,10 +126,14 @@ public class PlayerController : NetworkBehaviour {
 						if (prop.target)
 							properties.target = prop.target;
 					}*/
-                    if (properties.target != hit.collider.gameObject)
-                        CmdActivateParticleSystem();
-                    else
-                        properties.target = prop.target;
+					if (properties.target != hit.collider.gameObject)
+						CmdActivateParticleSystem ();
+					else {
+						properties.target = prop.target;
+						GameObject tn = properties.target.GetComponent<PlayerController>().note;
+						Textfields tf = tn.GetComponent<Textfields> ();
+						Debug.Log(tf.t1.text);
+					}
                 }
 			}
 		}
