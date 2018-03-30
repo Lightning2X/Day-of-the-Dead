@@ -273,13 +273,15 @@ public class PlayerController : NetworkBehaviour {
 
 	[ClientRpc]
 	public void RpcSetNote() {
-		PlayerController tc = properties.target.GetComponent<PlayerController> ();
-		note.t1.text = tc.t1;
-		note.t2.text = tc.t2;
-		note.t3.text = tc.t3;
-		note.t1.color = tc.c1;
-		note.t2.color = tc.c2;
-		note.t3.color = tc.c3;
+		if (properties.isAlive) {
+			PlayerController tc = properties.target.GetComponent<PlayerController> ();
+			note.t1.text = tc.t1;
+			note.t2.text = tc.t2;
+			note.t3.text = tc.t3;
+			note.t1.color = tc.c1;
+			note.t2.color = tc.c2;
+			note.t3.color = tc.c3;
+		}
 	}
 
 	[Command]

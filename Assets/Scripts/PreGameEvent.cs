@@ -56,7 +56,6 @@ public class PreGameEvent : MonoBehaviour {
 		if (dropdown.value != 0) {
 			t1.text = dropdown.captionText.text;
 			note.t1.text = dropdown.captionText.text;
-			pc.CmdSetNoteHead (t1.text, t1.color);
 			if (appearance [0] == dropdown.value - 1) {
 				t1.color = Color.green;
 				note.t1.color = Color.green;
@@ -64,6 +63,7 @@ public class PreGameEvent : MonoBehaviour {
 				t1.color = Color.red;
 				note.t1.color = Color.red;
 			}
+			pc.CmdSetNoteHead (t1.text, t1.color);
 			dropdown.interactable = false;
 			ddReady [0] = true;
 			if (ddReady [0] && ddReady [1] && ddReady [2])
@@ -75,7 +75,6 @@ public class PreGameEvent : MonoBehaviour {
 		if (dropdown.value != 0) {
 			t2.text = dropdown.captionText.text;
 			note.t2.text = dropdown.captionText.text;
-			pc.CmdSetNoteTorso (t2.text, t2.color);
 			if (appearance [1] == dropdown.value - 1) {
 				t2.color = Color.green;
 				note.t2.color = Color.green;
@@ -83,6 +82,7 @@ public class PreGameEvent : MonoBehaviour {
 				t2.color = Color.red;
 				note.t2.color = Color.red;
 			}
+			pc.CmdSetNoteTorso (t2.text, t2.color);
 			dropdown.interactable = false;
 			ddReady [1] = true;
 			if (ddReady [0] && ddReady [1] && ddReady [2])
@@ -94,7 +94,6 @@ public class PreGameEvent : MonoBehaviour {
 		if (dropdown.value != 0) {
 			t3.text = dropdown.captionText.text;
 			note.t3.text = dropdown.captionText.text;
-			pc.CmdSetNoteLegs (t3.text, t3.color);
 			if (appearance [2] == dropdown.value - 1) {
 				t3.color = Color.green;
 				note.t3.color = Color.green;
@@ -102,6 +101,7 @@ public class PreGameEvent : MonoBehaviour {
 				t3.color = Color.red;
 				note.t3.color = Color.red;
 			}
+			pc.CmdSetNoteLegs (t3.text, t3.color);
 			dropdown.interactable = false;
 			ddReady [2] = true;
 			if (ddReady [0] && ddReady [1] && ddReady [2])
