@@ -19,13 +19,13 @@ public class PreGameEvent : MonoBehaviour {
 	private bool[] ddReady = new bool[] {false, false, false};
 
 	void Start() {
-		note = GameObject.FindWithTag("Note").GetComponent<Textfields>();
 		StartCoroutine(GetAttr());
 	}
 
 	IEnumerator GetAttr()
 	{
 		yield return new WaitForSeconds(0.3f);
+		note = GameObject.FindWithTag("Note").GetComponent<Textfields>();
 		Cursor.lockState = CursorLockMode.None;
 		GameObject[] players = GameObject.FindGameObjectsWithTag ("Player");
 		for (int i = 0; i < players.Length; i++) {
@@ -57,6 +57,8 @@ public class PreGameEvent : MonoBehaviour {
 	}
 
 	public void OnD1Changed (Dropdown dropdown) {
+		Debug.Log (note.t1);
+		Debug.Log (dropdown.captionText.text);
 		if (dropdown.value != 0) {
 			t1.text = dropdown.captionText.text;
 			note.t1.text = dropdown.captionText.text;
