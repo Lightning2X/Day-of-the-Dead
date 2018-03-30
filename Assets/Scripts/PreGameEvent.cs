@@ -11,14 +11,15 @@ public class PreGameEvent : MonoBehaviour {
 	public Text t1;
 	public Text t2;
 	public Text t3;
-	public Text t4;
 
 	public Button button;
+
+	private Textfields note;
 
 	private bool[] ddReady = new bool[] {false, false, false};
 
 	void Start() {
-
+		note = GameObject.FindWithTag("Note").GetComponent<Textfields>();
 		StartCoroutine(GetAttr());
 	}
 
@@ -51,10 +52,14 @@ public class PreGameEvent : MonoBehaviour {
 	public void OnD1Changed (Dropdown dropdown) {
 		if (dropdown.value != 0) {
 			t1.text = dropdown.captionText.text;
-			if (appearance [0] == dropdown.value - 1)
+			note.t1.text = dropdown.captionText.text;
+			if (appearance [0] == dropdown.value - 1) {
 				t1.color = Color.green;
-			else
+				note.t1.color = Color.green;
+			} else {
 				t1.color = Color.red;
+				note.t1.color = Color.red;
+			}
 			dropdown.interactable = false;
 			ddReady [0] = true;
 			if (ddReady [0] && ddReady [1] && ddReady [2])
@@ -65,10 +70,14 @@ public class PreGameEvent : MonoBehaviour {
 	public void OnD2Changed (Dropdown dropdown) {
 		if (dropdown.value != 0) {
 			t2.text = dropdown.captionText.text;
-			if (appearance [1] == dropdown.value - 1)
+			note.t2.text = dropdown.captionText.text;
+			if (appearance [1] == dropdown.value - 1) {
 				t2.color = Color.green;
-			else
+				note.t2.color = Color.green;
+			} else {
 				t2.color = Color.red;
+				note.t2.color = Color.red;
+			}
 			dropdown.interactable = false;
 			ddReady [1] = true;
 			if (ddReady [0] && ddReady [1] && ddReady [2])
@@ -79,10 +88,14 @@ public class PreGameEvent : MonoBehaviour {
 	public void OnD3Changed (Dropdown dropdown) {
 		if (dropdown.value != 0) {
 			t3.text = dropdown.captionText.text;
-			if (appearance [2] == dropdown.value - 1)
+			note.t3.text = dropdown.captionText.text;
+			if (appearance [2] == dropdown.value - 1) {
 				t3.color = Color.green;
-			else
+				note.t3.color = Color.green;
+			} else {
 				t3.color = Color.red;
+				note.t3.color = Color.red;
+			}
 			dropdown.interactable = false;
 			ddReady [2] = true;
 			if (ddReady [0] && ddReady [1] && ddReady [2])
