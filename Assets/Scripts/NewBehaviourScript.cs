@@ -5,12 +5,15 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.AI;
 
+
 public class NewBehaviourScript : NetworkBehaviour
 {
     public GameObject[] Waypoints;
-    
 
     public int currentIndex = 0;
+
+	public bool isWaiting = false;
+	private float waitTimer;
 
     /*[SerializeField]
     Transform _destination;
@@ -27,11 +30,12 @@ public class NewBehaviourScript : NetworkBehaviour
     Transform currentDestination;*/
 
     NavMeshAgent _navMeshAgent;
+	RandomJump randomJump;
 	// Use this for initialization
 	void Start ()
     {
 		if (!hasAuthority) {
-			//Destroy (GetComponent<NavMeshAgent> ());
+			Destroy (GetComponent<NavMeshAgent> ());
 			Destroy (this);
 			return;
 		}
@@ -39,6 +43,7 @@ public class NewBehaviourScript : NetworkBehaviour
         Waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
 
         _navMeshAgent = this.GetComponent<NavMeshAgent>();
+		randomJump = this.GetComponent<RandomJump>();
 
         if(_navMeshAgent == null)
         {
@@ -51,11 +56,18 @@ public class NewBehaviourScript : NetworkBehaviour
 	}
 
     void Update()
-    {
-        if( Vector3.Distance(this.transform.position, Waypoints[currentIndex].transform.position) < 1f)
-        {
-            SetDestination();
-        }
+	{
+		waitTimer -= Time.deltaTime;
+		if (!isWaiting && Vector3.Distance (this.transform.position, Waypoints [currentIndex].transform.position) < 1f) {
+			isWaiting = true;
+			_navMeshAgent.enabled = false;
+			if (UnityEngine.Random.value < 0.5f)
+				waitTimer = (UnityEngine.Random.value * 3.0f);
+		} else if (isWaiting && waitTimer <= 0) {
+			isWaiting = false;
+			_navMeshAgent.enabled = true;
+			SetDestination ();
+		}
     }
 
 	public void SetDestination(int i)
@@ -65,13 +77,13 @@ public class NewBehaviourScript : NetworkBehaviour
 		GoToDestination();
 	}
 
-    private void SetDestination()
-    {
+	private void SetDestination()
+	{
 
-        currentIndex = UnityEngine.Random.Range(0, Waypoints.Length);
+		currentIndex = UnityEngine.Random.Range(0, Waypoints.Length);
 
-        GoToDestination();
-    }
+		GoToDestination();
+	}
 
     private void GoToDestination()
     {
@@ -81,4 +93,5 @@ public class NewBehaviourScript : NetworkBehaviour
             _navMeshAgent.SetDestination(targetVector);
         }
     }
+
 }

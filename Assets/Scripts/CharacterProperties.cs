@@ -9,15 +9,20 @@ public class CharacterProperties : NetworkBehaviour {
     [SerializeField] GameObject head;
     [SerializeField] GameObject torso;
     [SerializeField] GameObject legs;
-    Material material;
+
+	[SyncVar]
+	public int headAttr = 0;
+	[SyncVar]
+	public int torsoAttr = 0;
+	[SyncVar]
+	public int legsAttr = 0;
+
+	[SyncVar]
+    public GameObject target;
 
     [SyncVar]
 	public int _health = 1;
 
-    private void Start()
-    {
- 
-    }
     public int health {
 		get {
 			return _health;
@@ -31,12 +36,6 @@ public class CharacterProperties : NetworkBehaviour {
 		}
 	}
 
-	[ClientRpc]
-	void RpcDamage (int amount)
-	{
-		Debug.Log ("Your health is now: " + _health);
-	}
-
 	public void DealDamage (int amount)
 	{
 		if (!isServer)
@@ -48,16 +47,22 @@ public class CharacterProperties : NetworkBehaviour {
 			NetworkServer.Destroy (gameObject);
 	}
 
-    public void SetColors(int[] colorIndexes)
+	public void SetColors()
+	{
+		RpcSetColors (new int[]{headAttr, torsoAttr, legsAttr});
+	}
+
+	[ClientRpc]
+	void RpcSetColors(int[] colorIndexes)
     {
-        SetObjectColor(head, colorIndexes[0]);
-        SetObjectColor(torso, colorIndexes[1]);
-        SetObjectColor(legs, colorIndexes[2]);
+		SetObjectColor(head, colorIndexes[0]);
+		SetObjectColor(torso, colorIndexes[1]);
+		SetObjectColor(legs, colorIndexes[2]);
     }
 
     private void SetObjectColor(GameObject gameObject, int i)
     {
-        material = gameObject.GetComponent<Renderer>().material;
+        Material material = gameObject.GetComponent<Renderer>().material;
         if (i == 0)
             material.color = new Color(0.690F, 0.125F, 0.082F); //Rood
         else if (i == 1)

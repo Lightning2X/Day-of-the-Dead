@@ -9,7 +9,7 @@ public class RandomJump : NetworkBehaviour
     [SerializeField] float gravity = -100f;
     [SerializeField] float jumpSpeed = 20f;
     //[SerializeField] float moveSpeed = 10f;
-	[SerializeField] float raycastRange = 0.1f;
+	[SerializeField] float raycastRange = 0.2f;
 	[SerializeField] LayerMask raycastLayerMask;
 
 	private NavMeshAgent agent;
@@ -21,13 +21,19 @@ public class RandomJump : NetworkBehaviour
 	private Vector3 raycastOrigin;
     private float speed;
 	private float actionTimer;
+	private float waitTimer;
     [SerializeField] private float timerTime = 25;
-    private const float jumpChance = 20;
+    private const float jumpChance = 0.5f;
 
-    private bool isJumping = false;
+    public bool isJumping = false;
+	public bool isWaiting = false;
 
     // Use this for initialization
     void Start () {
+		if (!hasAuthority) {
+			Destroy (this);
+			return;
+		}
         agent = GetComponent<NavMeshAgent> ();
         controller = GetComponent<CharacterController> ();
 		behaviourScript = GetComponent<NewBehaviourScript> ();
@@ -49,19 +55,31 @@ public class RandomJump : NetworkBehaviour
 
 		// Update timer
 		actionTimer -= Time.deltaTime;
+		waitTimer -= Time.deltaTime;
 
         // Jump when timer hits 0
-        if (actionTimer <= 0 && !isJumping)
-        {
-            float tempRandom = Random.value;
-            if (tempRandom <= jumpChance)
-                Jump();
-            else
-                RandomMovement();
-        }
+		if (agent.enabled) {
+			if (actionTimer <= 0 && !isJumping) {
+				float tempRandom = Random.value;
+				if (tempRandom < 0.6f) {
+					if (tempRandom < 0.3f) {
+						Jump ();
+					} else {
+						RandomMovement ();
+					}
+				} else
+					RandomWait ();
+			}
+		}
+		if (isWaiting && waitTimer <= 0) {
+			isWaiting = false;
+			ResetToAgent ();
+		}
 
         // Move player
-        if (!agent.enabled)
+		jumpVelocity.x = transform.forward.x * 8.0f;
+		jumpVelocity.z = transform.forward.z * 8.0f;
+		if (!agent.enabled && isJumping)
 			controller.Move (jumpVelocity * Time.deltaTime);
 
 		// Hit object output from raycast
@@ -72,18 +90,25 @@ public class RandomJump : NetworkBehaviour
 		raycastOrigin.y -= controller.height * 0.5f;
 
 		// Stop jumping when we hit the ground
-		if (isJumping) Debug.DrawRay(raycastOrigin, -transform.up * raycastRange, Color.red, 0.1f); // debug
 		if (isJumping && Physics.Raycast (raycastOrigin, -transform.up, out hit, raycastRange, raycastLayerMask)) {
 			isJumping = false;
             ResetToAgent();
         }
     }
 
-    private void RandomMovement()
+    private void RandomWait()
     {
-        behaviourScript.SetDestination(Random.Range(0, behaviourScript.Waypoints.Length));
-        actionTimer = (Random.value * timerTime);
+		// Disable NavMeshAgent so we can controll it the CharacterController
+		isWaiting = true;
+		agent.enabled = false;
+        waitTimer = (Random.value * 10.0f);
     }
+
+	private void RandomMovement()
+	{
+		behaviourScript.SetDestination(Random.Range(0, behaviourScript.Waypoints.Length));
+		actionTimer = (Random.value * 10.0f);
+	}
 
     void Jump () {
 		// Keep track of that we are jumping
@@ -100,9 +125,9 @@ public class RandomJump : NetworkBehaviour
     private void ResetToAgent()
     {
         agent.enabled = true;
-        // Resume pathfinding
+		// Resume pathfinding
+		actionTimer = (Random.value * timerTime);
         behaviourScript.SetDestination(behaviourScript.currentIndex);
-        actionTimer = (Random.value * timerTime);
     }
 }
 
