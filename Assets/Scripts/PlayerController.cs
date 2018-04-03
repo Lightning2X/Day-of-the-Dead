@@ -114,8 +114,10 @@ public class PlayerController : NetworkBehaviour {
 
 					// Apply damage to other character
 					prop.DealDamage (weapon.damage);
+					if (pistol.GetComponent<WeaponProperties>().ammo != 1)
+						CmdSpawn (fxReload);
 					pistol.GetComponent<WeaponProperties>().ammo = 1;
-					CmdSpawn (fxReload);
+
 					if (properties.target != coll.gameObject)
                     {
                         CmdActivateParticleSystem();
@@ -175,9 +177,12 @@ public class PlayerController : NetworkBehaviour {
 
 					// Apply damage to other character
 					prop.DealDamage (weapon.damage);
+
+					if (weapon.ammo != 1)
+						CmdSpawn (fxReload);
+					
                     weapon.ammo = 1;
 
-					CmdSpawn (fxReload);
                     /*if (!prop.isAlive) {
 						weapon.ammo = 1;
 						if (prop.target)

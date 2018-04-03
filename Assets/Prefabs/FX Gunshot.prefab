@@ -73,8 +73,8 @@ AudioSource:
     - serializedVersion: 2
       time: 0
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: -1.9270867
+      outSlope: -1.9270867
       tangentMode: 0
     - serializedVersion: 2
       time: 1
@@ -84,7 +84,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   panLevelCustomCurve:
     serializedVersion: 2
     m_Curve:
