@@ -114,7 +114,7 @@ public class PlayerController : NetworkBehaviour {
 
 					// Apply damage to other character
 					prop.DealDamage (weapon.damage);
-					if (pistol.GetComponent<WeaponProperties>().ammo != 1)
+					if (pistol.GetComponent<WeaponProperties>().ammo == 0)
 						CmdSpawn (fxReload);
 					pistol.GetComponent<WeaponProperties>().ammo = 1;
 
