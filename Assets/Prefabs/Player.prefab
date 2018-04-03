@@ -1133,7 +1133,11 @@ MonoBehaviour:
   knife: {fileID: 1740001389296244}
   pistol: {fileID: 1870848408475130}
   partSystem: {fileID: 1129013827166834}
+  fxGunshot: {fileID: 1991904671877334, guid: 5a4be4424223040c6912030d41aecf17, type: 2}
+  fxReload: {fileID: 1976394043433390, guid: 616dad19e9b0c40da83b87ff2b6970e7, type: 2}
+  fxGunClick: {fileID: 1724368846040036, guid: 594281b74fc204d8da27d43adef4baa4, type: 2}
   initialPosition: {x: 0, y: 0, z: 0}
+  ready: 0
   note: {fileID: 0}
   t1: 
   t2: 

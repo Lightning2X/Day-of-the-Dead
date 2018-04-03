@@ -19,6 +19,11 @@ public class PlayerController : NetworkBehaviour {
 	[SerializeField] GameObject pistol;
 
     [SerializeField] GameObject partSystem;
+
+	[SerializeField] GameObject fxGunshot;
+	[SerializeField] GameObject fxReload;
+	[SerializeField] GameObject fxGunClick;
+
     int particleSystemTimer;
 
     public NetworkConnection localConn;
@@ -42,7 +47,7 @@ public class PlayerController : NetworkBehaviour {
 	[SyncVar]
 	public string t1;
 	[SyncVar]
-	public string t2;
+	public string t2; 
 	[SyncVar]
 	public string t3;
 	[SyncVar]
@@ -70,6 +75,17 @@ public class PlayerController : NetworkBehaviour {
 
 		//Cursor.lockState = CursorLockMode.Locked;
 		//Cursor.visible = false;
+	}
+
+	[Command]
+	void CmdSpawn(GameObject prefab)
+	{
+		var go = (GameObject)Instantiate(
+			prefab, 
+			transform.position, 
+			Quaternion.identity);
+
+		NetworkServer.Spawn(go);
 	}
 		
 	[Command]
@@ -99,6 +115,7 @@ public class PlayerController : NetworkBehaviour {
 					// Apply damage to other character
 					prop.DealDamage (weapon.damage);
 					pistol.GetComponent<WeaponProperties>().ammo = 1;
+					CmdSpawn (fxReload);
 					if (properties.target != coll.gameObject)
                     {
                         CmdActivateParticleSystem();
@@ -125,8 +142,11 @@ public class PlayerController : NetworkBehaviour {
 
 	private void Shoot (Vector3 position, Vector3 direction) {
 		// Does the weapon have ammo left?
-		if (weapon.ammo <= 0)
+		if (weapon.ammo <= 0) {
+			CmdSpawn (fxGunClick);
 			return;
+		}
+		CmdSpawn (fxGunshot);
 
 		// Decrement ammo amount
 		weapon.ammo--;
@@ -156,6 +176,8 @@ public class PlayerController : NetworkBehaviour {
 					// Apply damage to other character
 					prop.DealDamage (weapon.damage);
                     weapon.ammo = 1;
+
+					CmdSpawn (fxReload);
                     /*if (!prop.isAlive) {
 						weapon.ammo = 1;
 						if (prop.target)
@@ -379,7 +401,6 @@ public class PlayerController : NetworkBehaviour {
 		
 		if (ready) {
 			timeLeft -= Time.deltaTime;
-			Debug.Log (timeLeft);
 			timer.text = Mathf.Ceil (timeLeft).ToString ();
 			if (timeLeft < 0) {
 				Application.Quit ();

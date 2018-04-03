@@ -889,7 +889,6 @@ MonoBehaviour:
   t1: {fileID: 1522974032}
   t2: {fileID: 2109346799}
   t3: {fileID: 363581579}
-  t4: {fileID: 0}
   button: {fileID: 1786754781}
 --- !u!1 &469755228
 GameObject:
@@ -1986,7 +1985,6 @@ GameObject:
   - component: {fileID: 928789411}
   - component: {fileID: 928789410}
   - component: {fileID: 928789409}
-  - component: {fileID: 928789408}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1994,13 +1992,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &928789408
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 928789407}
-  m_Enabled: 1
 --- !u!124 &928789409
 Behaviour:
   m_ObjectHideFlags: 0

@@ -5772,6 +5772,7 @@ GameObject:
   - component: {fileID: 893203163}
   - component: {fileID: 893203162}
   - component: {fileID: 893203161}
+  - component: {fileID: 893203160}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -5779,6 +5780,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!81 &893203160
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 893203159}
+  m_Enabled: 1
 --- !u!124 &893203161
 Behaviour:
   m_ObjectHideFlags: 0
@@ -10228,6 +10236,9 @@ MonoBehaviour:
   m_OnlineScene: 
   m_SpawnPrefabs:
   - {fileID: 1317015894605374, guid: 315f6aaaa16acb341984aaf8b5e68eb5, type: 2}
+  - {fileID: 1976394043433390, guid: 616dad19e9b0c40da83b87ff2b6970e7, type: 2}
+  - {fileID: 1991904671877334, guid: 5a4be4424223040c6912030d41aecf17, type: 2}
+  - {fileID: 1724368846040036, guid: 594281b74fc204d8da27d43adef4baa4, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -10285,7 +10296,7 @@ MonoBehaviour:
   matchMaker: {fileID: 0}
   characters: []
   players: []
-  minPlayerCount: 4
+  minPlayerCount: 1
 --- !u!114 &1657293179
 MonoBehaviour:
   m_ObjectHideFlags: 0
