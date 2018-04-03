@@ -33,6 +33,11 @@ public class PlayerController : NetworkBehaviour {
 	private Vector3 direction;
 	private float speed;
 
+	private bool ready = false;
+	private Text timer;
+	private float timeLeft;
+	private bool timerActive = false;
+
 	public Textfields note;
 	[SyncVar]
 	public string t1;
@@ -58,6 +63,7 @@ public class PlayerController : NetworkBehaviour {
         controller = GetComponent<CharacterController>();
 		properties = GetComponent<CharacterProperties>();
 		GameObject panel = GameObject.FindWithTag ("Note");
+		timer = GameObject.FindWithTag ("Timer").GetComponent<Text>();
 		note = panel.GetComponent<Textfields> ();
 
 		mainCam = Camera.main;
@@ -204,17 +210,16 @@ public class PlayerController : NetworkBehaviour {
 		if (Input.GetKeyDown (KeyCode.Mouse0))
 			CmdAttack (virtualCamera.transform.position, virtualCamera.transform.forward);
 
-		if (Input.GetKeyDown(KeyCode.Alpha1))
-		{
-			CmdSwitchToUnarmed ();
-		}
-		if (Input.GetKeyDown(KeyCode.Alpha2))
-		{
-			CmdSwitchToKnife ();
-		}
-		if (Input.GetKeyDown(KeyCode.Alpha3))
-		{
-			CmdSwitchToPistol ();
+		if (ready) {
+			if (Input.GetKeyDown (KeyCode.Alpha1)) {
+				CmdSwitchToUnarmed ();
+			}
+			if (Input.GetKeyDown (KeyCode.Alpha2)) {
+				CmdSwitchToKnife ();
+			}
+			if (Input.GetKeyDown (KeyCode.Alpha3)) {
+				CmdSwitchToPistol ();
+			}
 		}
 	}
 
@@ -371,6 +376,15 @@ public class PlayerController : NetworkBehaviour {
 		// Move camera
 		if (mainCam)
 			mainCam.transform.SetPositionAndRotation (virtualCamera.transform.position, virtualCamera.transform.rotation);
+		
+		if (timerActive) {
+			timeLeft -= Time.deltaTime;
+			Debug.Log (timeLeft);
+			timer.text = Mathf.Ceil (timeLeft).ToString ();
+			if (timeLeft < 0) {
+				Application.Quit ();
+			}
+		}
 	}
 
 	void OnApplicationFocus(bool focus)
@@ -406,5 +420,15 @@ public class PlayerController : NetworkBehaviour {
 	void CmdResetPosition ()
 	{
 		transform.position = initialPosition;
+	}
+
+	public void startAllTimers(float startTime) {
+		RpcActivateTimer (startTime);
+	}
+
+	[ClientRpc]
+	void RpcActivateTimer (float startTime) {
+		timerActive = true;
+		timeLeft = startTime;
 	}
 }

@@ -21,6 +21,9 @@ public class NetworkController : NetworkManager {
 	CharacterProperties characterProperties;
 	AttributeList attributeList;
 
+	private bool gestart = false;
+	private float timeLeft = 300f;
+
 	public List<Client> clients = new List<Client>();
 
 	[SerializeField] int minPlayerCount = 2;
@@ -40,8 +43,19 @@ public class NetworkController : NetworkManager {
 
 	private void OnServerClientsReady() {
 		Debug.Log ("spel gestart");
-		for (int i = 0; i < clients.Count; i++) {
-			clients [i].player.GetComponent<PlayerController> ().resetPosition ();
+		gestart = true;
+		PlayerController pc = players [0].GetComponent<PlayerController> ();
+		pc.resetPosition ();
+		pc.startAllTimers (timeLeft);
+	}
+
+	void update() {
+		if (gestart){
+			timeLeft -= Time.deltaTime;
+			if ( timeLeft < 0 )
+			{
+				Application.Quit();
+			}
 		}
 	}
 
@@ -135,6 +149,7 @@ public class NetworkController : NetworkManager {
 	public override void OnClientDisconnect(NetworkConnection conn)
 	{
 		base.OnClientDisconnect (conn);
+		Application.Quit();
 	}
 
 	private void giveAttributes()

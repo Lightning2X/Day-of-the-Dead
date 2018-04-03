@@ -7,6 +7,7 @@ TagManager:
   - Waypoint
   - NPC
   - Note
+  - Timer
   layers:
   - Default
   - TransparentFX
