@@ -94,8 +94,21 @@ public class PlayerController : NetworkBehaviour {
 					prop.DealDamage (weapon.damage);
 					pistol.GetComponent<WeaponProperties>().ammo = 1;
 					if (properties.target != coll.gameObject)
-						CmdActivateParticleSystem ();
-					else {
+                    {
+                        CmdActivateParticleSystem();
+                        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+                        foreach (GameObject player in players)
+                        {
+                            CharacterProperties playerprop = player.GetComponent<CharacterProperties>();
+                            if (playerprop.target == coll.gameObject)
+                            {
+                                playerprop.target = prop.target;
+                                PlayerController pc = player.GetComponent<PlayerController>();
+                                pc.RpcSetNote();
+                            }
+                        }
+                    }
+                    else {
 						properties.target = prop.target;
 						RpcSetNote ();
 					}
@@ -143,8 +156,21 @@ public class PlayerController : NetworkBehaviour {
 							properties.target = prop.target;
 					}*/
 					if (properties.target != hit.collider.gameObject)
-						CmdActivateParticleSystem ();
-					else {
+                    {
+                        CmdActivateParticleSystem();
+                        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+                        foreach (GameObject player in players)
+                        {
+                            CharacterProperties playerprop = player.GetComponent<CharacterProperties>();
+                            if (playerprop.target == hit.collider.gameObject)
+                            {
+                                playerprop.target = prop.target;
+                                PlayerController pc = player.GetComponent<PlayerController>();
+                                pc.RpcSetNote();
+                            }
+                        }
+                    }
+                    else {
 						properties.target = prop.target;
 						RpcSetNote ();
 					}
