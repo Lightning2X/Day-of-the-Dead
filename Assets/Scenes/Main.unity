@@ -10285,7 +10285,7 @@ MonoBehaviour:
   matchMaker: {fileID: 0}
   characters: []
   players: []
-  minPlayerCount: 1
+  minPlayerCount: 4
 --- !u!114 &1657293179
 MonoBehaviour:
   m_ObjectHideFlags: 0
