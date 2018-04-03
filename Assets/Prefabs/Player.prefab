@@ -157,7 +157,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4745383547895140}
   - component: {fileID: 33349021495684834}
-  - component: {fileID: 135990033925815668}
   - component: {fileID: 23813301400555482}
   m_Layer: 0
   m_Name: Sphere
@@ -1245,18 +1244,6 @@ MonoBehaviour:
   damage: 0
   range: 0
   spread: 0
---- !u!135 &135990033925815668
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1503919567566070}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!143 &143596579792064638
 CharacterController:
   m_ObjectHideFlags: 1
