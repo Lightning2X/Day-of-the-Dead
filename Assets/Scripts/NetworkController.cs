@@ -44,9 +44,10 @@ public class NetworkController : NetworkManager {
 	private void OnServerClientsReady() {
 		Debug.Log ("spel gestart");
 		gestart = true;
-		PlayerController pc = players [0].GetComponent<PlayerController> ();
-		pc.resetPosition ();
-		pc.startAllTimers (timeLeft);
+		foreach (GameObject player in players) {
+			PlayerController pc = player.GetComponent<PlayerController> ();
+			pc.ready = true;
+		}
 	}
 
 	void update() {

@@ -33,10 +33,10 @@ public class PlayerController : NetworkBehaviour {
 	private Vector3 direction;
 	private float speed;
 
-	private bool ready = false;
+	[SyncVar]
+	public bool ready = false;
 	private Text timer;
-	private float timeLeft;
-	private bool timerActive = false;
+	private float timeLeft = 300f;
 
 	public Textfields note;
 	[SyncVar]
@@ -377,7 +377,7 @@ public class PlayerController : NetworkBehaviour {
 		if (mainCam)
 			mainCam.transform.SetPositionAndRotation (virtualCamera.transform.position, virtualCamera.transform.rotation);
 		
-		if (timerActive) {
+		if (ready) {
 			timeLeft -= Time.deltaTime;
 			Debug.Log (timeLeft);
 			timer.text = Mathf.Ceil (timeLeft).ToString ();
@@ -420,15 +420,5 @@ public class PlayerController : NetworkBehaviour {
 	void CmdResetPosition ()
 	{
 		transform.position = initialPosition;
-	}
-
-	public void startAllTimers(float startTime) {
-		RpcActivateTimer (startTime);
-	}
-
-	[ClientRpc]
-	void RpcActivateTimer (float startTime) {
-		timerActive = true;
-		timeLeft = startTime;
 	}
 }
